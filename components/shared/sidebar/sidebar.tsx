@@ -38,7 +38,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="fixed z-10">
+    <div className="fixed z-10 hidden md:block">
       <div className={`w-[280px] bg-sidebar h-screen duration-300 relative z-10`}>
         <div className="flex flex-col justify-between h-full overflow-y-auto">
           <div className="flex flex-col justify-center">
