@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 import { UserColumn } from './columns';
+import { AlertDialogDelete } from '@/components/shared/alert-delete';
 
 interface CellActionProps {
   data: UserColumn;
@@ -16,43 +17,21 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
-  const params = useParams();
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {};
 
   return (
     <>
-      {/* <AlertModal 
-        isOpen={open} 
-        onClose={() => setOpen(false)}
-        onConfirm={onConfirm}
-        loading={loading}
-      /> */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="h-8 w-8 p-0"
-          >
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => {}}>
-            <Copy className="mr-2 h-4 w-4" /> Copy Id
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => {}}>
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex justify-center gap-2">
+        <Button
+          variant={'outlinePrimary'}
+          size={'sm'}
+          onClick={() => router.push(`/users/${data._id}`)}
+        >
+          <Edit className=" h-4 w-4" />
+        </Button>
+        <AlertDialogDelete onAction={() => console.log('delete')} />
+      </div>
     </>
   );
 };
