@@ -6,7 +6,7 @@ const LoginPage = () => {
     <>
       <Card className="w-full md:1/2 lg:w-[40%] xl:w-[30%]">
         <CardHeader className="border-none">
-          <CardTitle className="text-center my-5 ">Login Admin </CardTitle>
+          <CardTitle className="text-center my-5 ">Soccer Chief</CardTitle>
         </CardHeader>
         <CardContent>
           <LoginForm />
