@@ -8,14 +8,14 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package.json package-lock.json ./
-RUN npm install --production --force
+RUN npm install
 
 # Copy application code
 COPY . .
 
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build --force
+RUN npm run build
 
 # Stage 2: Create the final lightweight image
 FROM node:18-alpine AS runner
