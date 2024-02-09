@@ -1,47 +1,23 @@
-# Stage 1: Install dependencies and build
-FROM node:18-alpine AS builder
+# Use official Node.js 14 image as base
+FROM node:18
 
-# Install system dependencies
-RUN apk add --no-cache libc6-compat
-
+# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./
+# Copy package.json and package-lock.json to workdir
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Install Next.js as a development dependency
-RUN npm install --save-dev next
-
-# Copy application code
+# Copy source code to workdir
 COPY . .
 
-# Build the application
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build --force
+# Build Next.js application
+RUN npm run build
 
-# Stage 2: Create the final lightweight image
-FROM node:18-alpine AS runner
-
-WORKDIR /app
-
-# Create a non-root user
-RUN addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
-
-# Copy built files and dependencies from the previous stage
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-# Switch to non-root user
-USER nextjs
-
-# Set environment variables
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3030
-
-# Expose port and start the application
+# Expose port 3030
 EXPOSE 3030
+
+# Command to run the application
 CMD ["npm", "start"]

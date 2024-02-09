@@ -1,13 +1,11 @@
-version: "3.8"
+version: "3"
+
 services:
-  web:
+  minisoccer-web-admin:
+    container_name: minisoccer-web-admin
     build:
-      context: ./
-      target: builder # Change target to 'builder'
-    volumes:
-      - .:/app
-    command: npm run dev # Change the command to 'npm run dev'
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3030:3030"
-    environment:
-      NODE_ENV: development
+    restart: always
