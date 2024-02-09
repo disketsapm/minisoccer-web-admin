@@ -10,6 +10,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Install Next.js as a development dependency
+RUN npm install --save-dev next
+
 # Copy application code
 COPY . .
 
