@@ -3,10 +3,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm install --production
-
-# Install tailwindcss
-RUN npm install tailwindcss
+RUN  npm install --production
 
 FROM node:20.9.0-alpine AS builder
 WORKDIR /app
