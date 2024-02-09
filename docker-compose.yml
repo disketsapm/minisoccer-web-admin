@@ -2,7 +2,6 @@ version: "3"
 
 services:
   minisoccer-web-admin:
-    container_name: minisoccer-web-admin
     build:
       context: .
       dockerfile: Dockerfile
