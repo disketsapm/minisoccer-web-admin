@@ -1,23 +1,36 @@
-# Use a smaller base image for Node.js 14
-FROM node:20.9.0 AS builder
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-# Set the working directory
-WORKDIR /
+COPY package.json package-lock.json ./
+RUN  npm install --production
 
-# Copy package.json and package-lock.json to the working directory
-COPY package.json package-lock.json /
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the Next.js application
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN npm run build
 
-# Expose the application port
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+USER nextjs
+
 EXPOSE 3030
 
-# Start the application
+ENV PORT 3030
+
 CMD ["npm", "start"]
