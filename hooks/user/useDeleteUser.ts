@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserService } from '@/services/user/user.service';
-import { CreateUserRequest } from '@/interfaces/user.interface';
 
-export function useAddUser() {
+export function useDeleteUser() {
   const userService = new UserService();
   const queryClient = useQueryClient();
 
-  return useMutation<string, string, CreateUserRequest>({
-    mutationFn: (payload) => userService.createUser(payload),
+  return useMutation<string, string, number>({
+    mutationFn: (userId: number) => userService.deleteUser(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getListUser'] });
     },
