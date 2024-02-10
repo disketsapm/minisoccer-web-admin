@@ -18,11 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     isAuthenticated = false;
   }
 
-  useEffect(() => {
-    if (!isAuthenticated && protectedRoutes.includes(pathname)) {
-      redirect('/login');
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (!isAuthenticated && protectedRoutes.includes(pathname)) {
+  //     redirect('/login');
+  //   }
+  // }, [isAuthenticated]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

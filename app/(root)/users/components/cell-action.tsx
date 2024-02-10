@@ -8,14 +8,15 @@ import { Button } from '@/components/ui/button';
 
 import { UserColumn } from './columns';
 import { AlertDialogDelete } from '@/components/shared/alert-delete';
-import { useDeleteUser } from '@/hooks/user/useDeleteUser';
+import { useUserId } from '@/store/id-store';
 
 interface CellActionProps {
   data: UserColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  console.log(data);
+  const { setUserId } = useUserId();
+
   const router = useRouter();
   const { mutate } = useDeleteUser();
 
@@ -29,11 +30,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <Button
           variant={'outlinePrimary'}
           size={'sm'}
-          onClick={() => router.push(`/users/${data?._id}`)}
+          onClick={() => {
+            setUserId(data?._id);
+            router.push(`/users/edit`);
+          }}
         >
           <Edit className=" h-4 w-4" />
         </Button>
-        <AlertDialogDelete onAction={onConfirm} />
+        <AlertDialogDelete onAction={() => console.log(data?.fullname)} />
       </div>
     </>
   );

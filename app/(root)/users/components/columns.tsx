@@ -8,7 +8,7 @@ export type UserColumn = {
   _id?: number;
   username: string;
   fullname: string;
-  phoneNumber: string;
+  phone: string;
   roles: string;
   createdAt: string;
 };
@@ -23,7 +23,7 @@ export const columns: ColumnDef<UserColumn>[] = [
     header: 'Fullname',
   },
   {
-    accessorKey: 'phoneNumber',
+    accessorKey: 'phone',
     header: 'Phone Number',
   },
   {

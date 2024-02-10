@@ -27,14 +27,14 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async createUser({ username, email, password, fullname, phoneNumber, roles }: CreateUserRequest) {
+  public async createUser({ username, email, password, fullname, phone, roles }: CreateUserRequest) {
     try {
       const response = await this.sendPostRequest<CreateUserRequest, string>(`/user`, {
         username,
         email,
         password,
         fullname,
-        phoneNumber,
+        phone,
         roles,
       });
 
@@ -44,14 +44,14 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async updateUser({ id, username, email, password, fullname, phoneNumber, roles }: UpdateUserRequest) {
+  public async updateUser({ id, username, email, password, fullname, phone, roles }: UpdateUserRequest) {
     try {
       const response = await this.sendPostRequest<UpdateUserRequest, string>(`/user/${id}`, {
         username,
         email,
         password,
         fullname,
-        phoneNumber,
+        phone,
         roles,
       });
 
