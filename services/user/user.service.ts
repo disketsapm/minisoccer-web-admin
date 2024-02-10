@@ -17,14 +17,16 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async createUser({ username, email, password, fullname, phoneNumber, roles }: CreateUserRequest) {
+  publi;
+
+  public async createUser({ username, email, password, fullname, phone, roles }: CreateUserRequest) {
     try {
       const response = await this.sendPostRequest<CreateUserRequest, string>(`/user`, {
         username,
         email,
         password,
         fullname,
-        phoneNumber,
+        phone,
         roles,
       });
 

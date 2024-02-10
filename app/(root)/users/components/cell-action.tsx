@@ -10,15 +10,18 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 
 import { UserColumn } from './columns';
 import { AlertDialogDelete } from '@/components/shared/alert-delete';
+import { useUserId } from '@/store/id-store';
 
 interface CellActionProps {
   data: UserColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const { setUserId } = useUserId();
+
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = () => {};
 
   return (
     <>
@@ -26,11 +29,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <Button
           variant={'outlinePrimary'}
           size={'sm'}
-          onClick={() => router.push(`/users/${data._id}`)}
+          onClick={() => {
+            setUserId(data?._id);
+            router.push(`/users/edit`);
+          }}
         >
           <Edit className=" h-4 w-4" />
         </Button>
-        <AlertDialogDelete onAction={() => console.log('delete')} />
+        <AlertDialogDelete onAction={() => console.log(data?.fullname)} />
       </div>
     </>
   );

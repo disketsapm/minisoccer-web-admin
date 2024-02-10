@@ -40,7 +40,7 @@ export function AlertDialogDelete({ onAction }: AlertDialogDelete) {
               variant="destructive"
               className="gap-2"
             >
-              <FaTrashAlt /> Continue
+              Continue
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
