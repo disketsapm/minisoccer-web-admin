@@ -1,16 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { Edit } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 // import { AlertModal } from "@/components/modals/alert-modal";
 
 import { UserColumn } from './columns';
 import { AlertDialogDelete } from '@/components/shared/alert-delete';
 import { useUserId } from '@/store/id-store';
+import { useDeleteUser } from '@/hooks/user/useDeleteUser';
 
 interface CellActionProps {
   data: UserColumn;
@@ -20,8 +19,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { setUserId } = useUserId();
 
   const router = useRouter();
+  const { mutate } = useDeleteUser();
 
-  const onConfirm = () => {};
+  const onConfirm = async () => {
+    await mutate(data?._id ?? 0);
+  };
 
   return (
     <>

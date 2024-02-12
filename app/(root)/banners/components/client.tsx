@@ -8,13 +8,13 @@ import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 
-import { columns, UserColumn } from './columns';
+import { columns, BannerColumn } from './columns';
 
-interface UserClientProps {
-  data: UserColumn[];
+interface BannerClientProps {
+  data: BannerColumn[];
 }
 
-export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
+export const BannerClient: React.FC<BannerClientProps> = ({ data }) => {
   const params = useParams();
   const router = useRouter();
 
@@ -22,10 +22,10 @@ export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
     <>
       <div className="flex items-center justify-between">
         <Heading
-          title={`User (${data.length})`}
-          description="Manage user "
+          title={`Banner (${data.length})`}
+          description="Manage Banner "
         />
-        <Button onClick={() => router.push(`/users/new`)}>
+        <Button onClick={() => router.push(`/banners/new`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>

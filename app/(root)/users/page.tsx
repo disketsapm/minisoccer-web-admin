@@ -5,7 +5,6 @@ import { useGetListUser } from '@/hooks/user/useGetListUser';
 
 const UserPage = () => {
   const { data, error } = useGetListUser();
-  console.log(data?.results);
 
   return (
     <div className="flex-col">

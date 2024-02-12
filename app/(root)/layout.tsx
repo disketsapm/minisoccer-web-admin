@@ -11,8 +11,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   let isAuthenticated: boolean;
 
   if (typeof localStorage !== 'undefined') {
-    isAuthenticated = !!localStorage.getItem('token');
+    // isAuthenticated = !!localStorage.getItem('token');
+    isAuthenticated = true;
   } else {
+    // isAuthenticated = false;
     isAuthenticated = false;
   }
 

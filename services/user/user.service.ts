@@ -1,7 +1,7 @@
 import { BaseResponse } from '@/interfaces/global.interface';
 import { RequestAdapter } from '../request-adapter.service';
 
-import { CreateUserRequest, GetListUserResponse } from '@/interfaces/user.interface';
+import { CreateUserRequest, GetListUserResponse, UpdateUserRequest } from '@/interfaces/user.interface';
 
 export class UserService extends RequestAdapter {
   constructor() {
@@ -17,7 +17,15 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  publi;
+  public async getUserById(id: number): Promise<BaseResponse<GetListUserResponse>> {
+    try {
+      const response = await this.sendGetRequest<BaseResponse<GetListUserResponse>>(`/user/${id}`);
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   public async createUser({ username, email, password, fullname, phone, roles }: CreateUserRequest) {
     try {
@@ -30,6 +38,32 @@ export class UserService extends RequestAdapter {
         roles,
       });
 
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async updateUser({ id, username, email, password, fullname, phone, roles }: UpdateUserRequest) {
+    try {
+      const response = await this.sendPostRequest<UpdateUserRequest, string>(`/user/${id}`, {
+        username,
+        email,
+        password,
+        fullname,
+        phone,
+        roles,
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async deleteUser(id: number) {
+    try {
+      const response = await this.sendDeleteRequest<string>(`/user/${id}`);
       return response.data;
     } catch (error) {
       throw error;

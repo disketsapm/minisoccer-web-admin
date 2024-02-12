@@ -1,5 +1,5 @@
 export type GetListUserResponse = {
-  _id: number;
+  id?: number;
   username: string;
   email: string;
   password: string;
@@ -10,4 +10,6 @@ export type GetListUserResponse = {
   createdAt: string; // You might want to consider using Date type instead of string for dates
 };
 
-export type CreateUserRequest = Omit<GetListUserResponse, '_id' | 'socialMedia' | 'createdAt'>;
+export type UpdateUserRequest = Omit<GetListUserResponse, 'socialMedia' | 'createdAt'>;
+
+export type CreateUserRequest = Omit<GetListUserResponse, 'id' | 'socialMedia' | 'createdAt'>;
