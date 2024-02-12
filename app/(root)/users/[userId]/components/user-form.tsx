@@ -2,7 +2,7 @@
 
 import * as z from 'zod';
 import axios from 'axios';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -17,6 +17,7 @@ import { Heading } from '@/components/ui/heading';
 import { GetListUserResponse } from '@/interfaces/user.interface';
 import { useAddUser } from '@/hooks/user/useAddUser';
 import { useUserId } from '@/store/id-store';
+import { useGetUserById } from '@/hooks/user/useGetUserById';
 // import { AlertModal } from "@/components/modals/alert-modal"
 
 const formSchema = z.object({
@@ -30,24 +31,34 @@ const formSchema = z.object({
 
 type UserFormValues = z.infer<typeof formSchema>;
 
-interface UserFormProps {
-  initialData: GetListUserResponse | null;
-}
+export const UserForm = (type: any) => {
+  const { userId } = useUserId();
 
-export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
+  const { mutateAsync: getUserById, data: dataUser } = useGetUserById();
+  const initialData = dataUser?.data;
+  console.log(initialData);
+
+  useEffect(() => {
+    if (userId && type) {
+      getUserById({ _id: userId }).then(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [userId]);
+
   const params = useParams();
   const router = useRouter();
   const { mutate } = useAddUser();
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? 'Edit User' : 'Create User';
-  const description = initialData ? 'Edit a User.' : 'Add a new User';
-  const toastMessage = initialData ? 'User updated.' : 'User created.';
-  const action = initialData ? 'Save changes' : 'Create';
+  const title = type ? 'Edit User' : 'Create User';
+  const description = type ? 'Edit a User.' : 'Add a new User';
+  const toastMessage = type ? 'User updated.' : 'User created.';
+  const action = type ? 'Save changes' : 'Create';
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {
+    defaultValues: {
       username: '',
       email: '',
       password: '',
@@ -56,6 +67,17 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
       roles: '',
     },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      form.setValue('username', initialData.username);
+      form.setValue('email', initialData.email);
+      form.setValue('password', initialData.password);
+      form.setValue('fullname', initialData.fullname);
+      form.setValue('phoneNumber', initialData.phone);
+      form.setValue('roles', initialData.roles);
+    }
+  }, [initialData]);
 
   const onSubmit = async (data: UserFormValues) => {
     try {
