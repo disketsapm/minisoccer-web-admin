@@ -6,5 +6,6 @@ export type SelectOption = {
 export type SelectOptions = SelectOption[];
 
 export interface BaseResponse<T> {
-  results: T;
+  status: string;
+  data: T;
 }

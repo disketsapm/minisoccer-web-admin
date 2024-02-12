@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { UserColumn } from './columns';
 import { AlertDialogDelete } from '@/components/shared/alert-delete';
 import { useUserId } from '@/store/id-store';
+import { useDeleteUser } from '@/hooks/user/useDeleteUser';
 
 interface CellActionProps {
   data: UserColumn;
