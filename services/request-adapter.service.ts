@@ -68,7 +68,7 @@ export class RequestAdapter {
     return this.adapter.patch<T, AxiosResponse<B>>(url, data, config);
   }
 
-  public sendDeleteRequest<T>(url: string, config?: InternalAxiosRequestConfig): Promise<AxiosResponse<T>> {
-    return this.adapter.delete<T, AxiosResponse<T>>(url, config);
+  public sendDeleteRequest<B, T>(url: string, data?: B, config?: InternalAxiosRequestConfig): Promise<AxiosResponse<T>> {
+    return this.adapter.delete<T, AxiosResponse<T>>(url, { data, ...config });
   }
 }

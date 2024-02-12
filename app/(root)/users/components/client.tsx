@@ -18,6 +18,7 @@ export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
   const params = useParams();
   const router = useRouter();
 
+  console.log(data);
   return (
     <>
       <div className="flex items-center justify-between">

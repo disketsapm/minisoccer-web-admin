@@ -22,7 +22,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { mutate } = useDeleteUser();
 
   const onConfirm = async () => {
-    await mutate(data?._id ?? 0);
+    await mutate({
+      _id: data?._id,
+    });
   };
 
   return (
@@ -38,7 +40,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         >
           <Edit className=" h-4 w-4" />
         </Button>
-        <AlertDialogDelete onAction={() => console.log(data?.fullname)} />
+        <AlertDialogDelete onAction={onConfirm} />
       </div>
     </>
   );

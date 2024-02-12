@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 
 export type UserColumn = {
-  _id?: number;
+  _id?: string;
   username: string;
   fullname: string;
   phone: string;

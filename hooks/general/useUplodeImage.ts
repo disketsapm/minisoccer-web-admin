@@ -3,7 +3,7 @@ import { GeneralService } from '@/services/general.service';
 
 export function useUploadImage() {
   const generalService = new GeneralService();
-  return useMutation<string, string, any>({
+  return useMutation<any, string, any>({
     mutationFn: (payload) => generalService.uploadFile(payload),
   });
 }

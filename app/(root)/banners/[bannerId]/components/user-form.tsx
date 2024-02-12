@@ -33,12 +33,6 @@ const formSchema = z.object({
     }
     return 'Image is required';
   }),
-  ctaFile: z.custom((value) => {
-    if (value) {
-      return true;
-    }
-    return 'Image is required';
-  }),
 });
 
 type BannerFormValues = z.infer<typeof formSchema>;
@@ -48,7 +42,6 @@ interface BannerFormProps {
 }
 
 export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
-  const { mutate } = useAddUser();
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit User' : 'Create User';
@@ -69,19 +62,18 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
     },
   });
 
-  const { data: imageUrl, mutate: uploadFile } = useUploadImage();
-  const { data: ctaUrl, mutate: uploadCta } = useUploadImage();
-  const { mutate: createBanner } = useAddBanner();
+  const { mutateAsync: uploadFile } = useUploadImage();
+  const { mutateAsync: createBanner } = useAddBanner();
 
   const image = form.watch('imageFile');
-  const cta = form.watch('ctaFile');
   console.log(form.watch());
 
   const onSubmit = async (data: BannerFormValues) => {
     try {
-      if (data.imageFile || data.ctaFile) {
-        uploadFile({ file: data.imageFile, type: 'Homepage' });
-        uploadCta({ file: data.ctaFile, type: 'Homepage' });
+      let uploadedImageUrl = null;
+      if (data.imageFile) {
+        const uploadedImage = await uploadFile({ file: data.imageFile, type: 'Homepage' });
+        uploadedImageUrl = uploadedImage.data.file_url;
       }
 
       const bannerData = {
@@ -90,32 +82,18 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
         type: data.type,
         availableAt: data.availableAt,
         availableUntil: data.availableUntil,
-        image: data.imageFile ? imageUrl?.data?.file_url : initialData ? initialData.image : image?.data?.file_url,
-        ctaUrl: data.ctaFile ? ctaUrl?.data?.file_url : initialData ? initialData.ctaUrl : cta?.data?.file_url,
+        ctaUrl: data.ctaUrl,
+        image: data.imageFile ? uploadedImageUrl : initialData ? initialData.image : image?.data?.file_url,
       };
+
       createBanner(bannerData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // const onDelete = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
-  //     router.refresh();
-  //     router.push(`/${params.storeId}/sizes`);
-  //     toast.success('Size deleted.');
-  //   } catch (error: any) {
-  //     toast.error('Make sure you removed all products using this size first.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
     form.setValue('image', image?.name || '');
-    form.setValue('ctaUrl', image?.name || '');
   }, [image]);
 
   console.log(form.watch());
@@ -254,28 +232,18 @@ export const BannerForm: React.FC<BannerFormProps> = ({ initialData }) => {
             />
             <FormField
               control={form.control}
-              name="ctaFile"
+              name="ctaUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Upload CTA</FormLabel>
+                  <FormLabel> CTA URL</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
                       placeholder="description"
-                      type="file"
-                      onChange={(e) => field.onChange(e.target.files?.[0])}
-                      ref={field.ref}
-                      name={field.name}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
-                  {cta && (
-                    <img
-                      src={URL.createObjectURL(cta)} // Create a temporary URL for the Blob
-                      alt="Uploaded Image"
-                      style={{ maxWidth: '100%', maxHeight: '300px' }} // Set max width and height
-                    />
-                  )}
                 </FormItem>
               )}
             />

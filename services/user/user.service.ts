@@ -7,19 +7,18 @@ export class UserService extends RequestAdapter {
   constructor() {
     super();
   }
-  public async getListUser(params?: any): Promise<BaseResponse<Array<GetListUserResponse>>> {
+  public async getListUser(): Promise<BaseResponse<Array<GetListUserResponse>>> {
     try {
-      const response = await this.sendGetRequest<BaseResponse<Array<GetListUserResponse>>>(`/user`, params);
-
+      const response = await this.sendPostRequest<object, BaseResponse<Array<GetListUserResponse>>>(`/users`, {});
       return response.data;
     } catch (error) {
       throw error;
     }
   }
 
-  public async getUserById(id: number): Promise<BaseResponse<GetListUserResponse>> {
+  public async getUserById(payload: { _id: string }): Promise<BaseResponse<GetListUserResponse>> {
     try {
-      const response = await this.sendGetRequest<BaseResponse<GetListUserResponse>>(`/user/${id}`);
+      const response = await this.sendPostRequest<object, BaseResponse<GetListUserResponse>>(`/users`, payload);
 
       return response.data;
     } catch (error) {
@@ -61,9 +60,9 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async deleteUser(id: number) {
+  public async deleteUser(payload: { _id: string }) {
     try {
-      const response = await this.sendDeleteRequest<string>(`/user/${id}`);
+      const response = await this.sendDeleteRequest<object, string>(`/user`, payload);
       return response.data;
     } catch (error) {
       throw error;

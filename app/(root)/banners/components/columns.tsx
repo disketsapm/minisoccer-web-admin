@@ -37,15 +37,6 @@ export const columns: ColumnDef<BannerColumn>[] = [
   {
     accessorKey: 'ctaUrl',
     header: 'CTA Url',
-    cell: ({ row }) => (
-      <Image
-        src={row.original.ctaUrl}
-        alt="banner"
-        width={400}
-        height={400}
-        objectFit="cover"
-      />
-    ),
   },
   {
     accessorKey: 'ctaCount',

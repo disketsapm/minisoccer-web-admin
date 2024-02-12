@@ -15,7 +15,7 @@ export class GeneralService extends RequestAdapter {
       formData.append('file', file);
       formData.append('type', type);
 
-      const response = await this.sendPostRequest<any, string>(`/file`, formData, {
+      const response = await this.sendPostRequest<any, any>(`/file`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
