@@ -43,9 +43,9 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async updateUser({ id, username, email, password, fullname, phone, roles }: UpdateUserRequest) {
+  public async updateUser({ username, email, password, fullname, phone, roles }: UpdateUserRequest) {
     try {
-      const response = await this.sendPostRequest<UpdateUserRequest, string>(`/user/${id}`, {
+      const response = await this.sendPostRequest<UpdateUserRequest, string>(`/user`, {
         username,
         email,
         password,

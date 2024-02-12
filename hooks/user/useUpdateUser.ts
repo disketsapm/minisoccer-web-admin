@@ -7,7 +7,7 @@ export function useUpdateUser() {
   const queryClient = useQueryClient();
 
   return useMutation<string, string, CreateUserRequest>({
-    mutationFn: (payload) => userService.createUser(payload),
+    mutationFn: (payload) => userService.updateUser(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getListUser'] });
     },
