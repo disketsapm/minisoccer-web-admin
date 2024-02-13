@@ -1,7 +1,11 @@
-import { BaseResponse } from '@/interfaces/global.interface';
-import { RequestAdapter } from '../request-adapter.service';
+import { BaseResponse } from "@/interfaces/global.interface";
+import { RequestAdapter } from "../request-adapter.service";
 
-import { CreateUserRequest, GetListUserResponse, UpdateUserRequest } from '@/interfaces/user.interface';
+import {
+  CreateUserRequest,
+  GetListUserResponse,
+  UpdateUserRequest
+} from "@/interfaces/user.interface";
 
 export class UserService extends RequestAdapter {
   constructor() {
@@ -9,7 +13,10 @@ export class UserService extends RequestAdapter {
   }
   public async getListUser(): Promise<BaseResponse<Array<GetListUserResponse>>> {
     try {
-      const response = await this.sendPostRequest<object, BaseResponse<Array<GetListUserResponse>>>(`/users`, {});
+      const response = await this.sendPostRequest<object, BaseResponse<Array<GetListUserResponse>>>(
+        `/users`,
+        {}
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -18,7 +25,10 @@ export class UserService extends RequestAdapter {
 
   public async getUserById(payload: { _id: string }): Promise<BaseResponse<GetListUserResponse>> {
     try {
-      const response = await this.sendPostRequest<object, BaseResponse<GetListUserResponse>>(`/users`, payload);
+      const response = await this.sendPostRequest<object, BaseResponse<GetListUserResponse>>(
+        `/users`,
+        payload
+      );
 
       return response.data;
     } catch (error) {
@@ -26,15 +36,14 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async createUser({ username, email, password, fullname, phone, roles }: CreateUserRequest) {
+  public async createUser({ email, password, fullName, phoneNumber, roles }: CreateUserRequest) {
     try {
       const response = await this.sendPostRequest<CreateUserRequest, string>(`/user`, {
-        username,
         email,
         password,
-        fullname,
-        phone,
-        roles,
+        fullName,
+        phoneNumber,
+        roles
       });
 
       return response.data;
@@ -43,15 +52,22 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async updateUser({ username, email, password, fullname, phone, roles }: UpdateUserRequest) {
+  public async updateUser({
+    _id,
+    email,
+    password,
+    fullName,
+    phoneNumber,
+    roles
+  }: UpdateUserRequest) {
     try {
-      const response = await this.sendPostRequest<UpdateUserRequest, string>(`/user`, {
-        username,
+      const response = await this.sendPutRequest<UpdateUserRequest, string>(`/user`, {
+        _id,
         email,
         password,
-        fullname,
-        phone,
-        roles,
+        fullName,
+        phoneNumber,
+        roles
       });
 
       return response.data;

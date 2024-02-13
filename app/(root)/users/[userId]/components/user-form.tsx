@@ -1,112 +1,89 @@
-'use client';
+"use client";
 
-import * as z from 'zod';
-import axios from 'axios';
-import { use, useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import { Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import * as z from "zod";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Separator } from '@/components/ui/separator';
-import { Heading } from '@/components/ui/heading';
-import { GetListUserResponse } from '@/interfaces/user.interface';
-import { useAddUser } from '@/hooks/user/useAddUser';
-import { useUserId } from '@/store/id-store';
-import { useGetUserById } from '@/hooks/user/useGetUserById';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
+import { Heading } from "@/components/ui/heading";
+import { GetListUserResponse } from "@/interfaces/user.interface";
+import { useAddUser } from "@/hooks/user/useAddUser";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { useUpdateUser } from "@/hooks/user/useUpdateUser";
 // import { AlertModal } from "@/components/modals/alert-modal"
 
 const formSchema = z.object({
-  username: z.string().min(1),
+  _id: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
-  fullname: z.string().min(1),
+  fullName: z.string().min(1),
   phoneNumber: z.string().min(1),
-  roles: z.string().min(1),
+  roles: z.string().min(1)
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
 
-export const UserForm = (type: any) => {
-  const { userId } = useUserId();
+type UserFormProps = {
+  data?: GetListUserResponse;
+};
 
-  const { mutateAsync: getUserById, data: dataUser } = useGetUserById();
-  const initialData = dataUser?.data;
-  console.log(initialData);
-
-  useEffect(() => {
-    if (userId && type) {
-      getUserById({ _id: userId }).then(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
-  }, [userId]);
-
+export const UserForm = ({ data }: UserFormProps) => {
+  console.log(data);
   const params = useParams();
   const router = useRouter();
-  const { mutate } = useAddUser();
+  const { mutateAsync: addUser } = useAddUser();
+  const { mutateAsync: updateUser } = useUpdateUser();
   const [loading, setLoading] = useState(false);
 
-  const title = type ? 'Edit User' : 'Create User';
-  const description = type ? 'Edit a User.' : 'Add a new User';
-  const toastMessage = type ? 'User updated.' : 'User created.';
-  const action = type ? 'Save changes' : 'Create';
+  const description = data ? "Edit a User." : "Add a new User";
+  const title = data ? "Edit User" : "Create User";
+  const toastMessage = data ? "User updated." : "User created.";
+  const action = data ? "Save changes" : "Create";
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      fullname: '',
-      phoneNumber: '',
-      roles: '',
-    },
+      _id: data?._id ?? "",
+      email: data?.email ?? "",
+      password: data?.password ?? "",
+      fullName: data?.fullName ?? "",
+      phoneNumber: data?.phoneNumber ?? "",
+      roles: data?.roles ?? ""
+    }
   });
 
-  useEffect(() => {
-    if (initialData) {
-      form.setValue('username', initialData.username);
-      form.setValue('email', initialData.email);
-      form.setValue('password', initialData.password);
-      form.setValue('fullname', initialData.fullname);
-      form.setValue('phoneNumber', initialData.phone);
-      form.setValue('roles', initialData.roles);
-    }
-  }, [initialData]);
-
-  console.log(form.watch());
-  const onSubmit = async (data: UserFormValues) => {
+  const onSubmit = async (dataForm: UserFormValues) => {
     try {
       setLoading(true);
-      if (initialData) {
-        await axios.patch(`/api/${params.storeId}/sizes/${params.sizeId}`, data);
+      if (data) {
+        updateUser(dataForm);
       } else {
-        mutate(data);
+        addUser(dataForm);
       }
       router.refresh();
       router.push(`/users`);
       toast.success(toastMessage);
     } catch (error: any) {
-      toast.error('Something went wrong.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onDelete = async () => {
-    try {
-      setLoading(true);
-      await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
-      router.refresh();
-      router.push(`/${params.storeId}/sizes`);
-      toast.success('Size deleted.');
-    } catch (error: any) {
-      toast.error('Make sure you removed all products using this size first.');
+      toast.error("Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -126,24 +103,11 @@ export const UserForm = (type: any) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 md:w-[70%] w-full"
         >
+          <input
+            type="hidden"
+            {...form.register("_id")}
+          />
           <div className="md:grid md:grid-cols-2 gap-8">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="username"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="email"
@@ -184,7 +148,7 @@ export const UserForm = (type: any) => {
             />
             <FormField
               control={form.control}
-              name="fullname"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fullname</FormLabel>
@@ -222,15 +186,23 @@ export const UserForm = (type: any) => {
               control={form.control}
               name="roles"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-2">
                   <FormLabel>Roles</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="roles"
-                      {...field}
-                    />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Admin">Admin</SelectItem>
+                      <SelectItem value="Cashier">Cashier</SelectItem>
+                      <SelectItem value="Customer">Customer</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

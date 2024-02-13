@@ -1,13 +1,17 @@
-import { useUserId } from '@/store/id-store';
-import { UserForm } from './components/user-form';
-import { useGetUserById } from '@/hooks/user/useGetUserById';
-import { useEffect } from 'react';
+import { UserForm } from "./components/user-form";
+import { UserService } from "@/services/user/user.service";
 
-const UserPage = ({ params }: { params: { userId: string } }) => {
+const UserPage = async ({ params }: { params: { userId: string } }) => {
+  const userService = new UserService();
+
+  let response: any = {};
+  if (params.userId !== "new") {
+    response = await userService.getUserById({ _id: params.userId });
+  }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <UserForm type={params.userId} />
+        <UserForm data={response?.data ?? null} />
       </div>
     </div>
   );

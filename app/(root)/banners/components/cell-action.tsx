@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-// import { AlertModal } from "@/components/modals/alert-modal";
+import { Button } from "@/components/ui/button";
 
-import { BannerColumn } from './columns';
-import { AlertDialogDelete } from '@/components/shared/alert-delete';
-import { useDeletebanner } from '@/hooks/banner/useDeleteBanner';
+import { BannerColumn } from "./columns";
+import { AlertDialogDelete } from "@/components/shared/alert-delete";
+import { useDeletebanner } from "@/hooks/banner/useDeleteBanner";
+import { useDeleteFile } from "@/hooks/general/useDeleteImage";
+import toast from "react-hot-toast";
+import { extractFilenameFromURL } from "@/lib/utils";
 
 interface CellActionProps {
   data: BannerColumn;
@@ -18,22 +18,24 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
-
-  const { mutate } = useDeletebanner();
-
-  const onConfirm = () => {
-    mutate({
-      _id: data?._id,
+  const { mutateAsync: deleteBanner } = useDeletebanner();
+  const { mutateAsync: deleteFile } = useDeleteFile();
+  const onConfirm = async () => {
+    const filename = extractFilenameFromURL(data?.image);
+    await deleteFile({ filename: filename });
+    await deleteBanner({
+      _id: data?._id
     });
+    toast.success("Banner deleted.");
   };
 
   return (
     <>
       <div className="flex justify-center gap-2">
         <Button
-          variant={'outlinePrimary'}
-          size={'sm'}
-          onClick={() => router.push(`/banners/edit`)}
+          variant={"outlinePrimary"}
+          size={"sm"}
+          onClick={() => router.push(`/banners/${data?._id}`)}
         >
           <Edit className=" h-4 w-4" />
         </Button>
