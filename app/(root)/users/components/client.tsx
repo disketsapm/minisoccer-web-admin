@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Plus } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { Plus } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 
-import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
-import { Separator } from '@/components/ui/separator';
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
 
-import { columns, UserColumn } from './columns';
+import { columns, UserColumn } from "./columns";
 
 interface UserClientProps {
   data: UserColumn[];
@@ -18,6 +18,7 @@ export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
   const params = useParams();
   const router = useRouter();
 
+  console.log(data);
   return (
     <>
       <div className="flex items-center justify-between">
@@ -31,7 +32,7 @@ export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
       </div>
       <Separator />
       <DataTable
-        searchKey="username"
+        searchKey="email"
         columns={columns}
         data={data}
       />

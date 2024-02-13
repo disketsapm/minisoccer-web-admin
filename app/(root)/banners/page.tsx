@@ -1,15 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
 import { BannerClient } from './components/client';
 import { useGetBanners } from '@/hooks/banner/useGetBanners';
 
 const BannerPage = () => {
-  const { data, error, mutate } = useGetBanners();
-
-  useEffect(() => {
-    mutate(null);
-  }, []);
+  const { data } = useGetBanners();
 
   return (
     <div className="flex-col">
