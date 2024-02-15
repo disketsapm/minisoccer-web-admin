@@ -7,11 +7,12 @@ export class BannerService extends RequestAdapter {
   constructor() {
     super();
   }
-  public async getBanners(): Promise<BaseResponse<Array<Banner>>> {
+  public async getBanners(params: any): Promise<BaseResponse<Array<Banner>>> {
     try {
       const response = await this.sendPostRequest<object, BaseResponse<Array<Banner>>>(
         `/banners`,
-        {}
+        {},
+        params
       );
 
       return response.data;

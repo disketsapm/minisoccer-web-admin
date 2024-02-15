@@ -26,6 +26,13 @@ import { useUploadImage } from "@/hooks/general/useUplodeImage";
 import { useAddBanner } from "@/hooks/banner/useAddBanner";
 import { useUpdateBanner } from "@/hooks/banner/useUpdateBanner";
 import { useDeleteFile } from "@/hooks/general/useDeleteImage";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -33,6 +40,7 @@ const formSchema = z.object({
   image: z.string().min(1, { message: "Image is required" }),
   type: z.string().min(1, { message: "Type is required" }),
   ctaUrl: z.string().url().min(1, { message: "CTA Url is required" }),
+  deviceType: z.string().min(1, { message: "Device Type is required" }),
   availableAt: z.string().min(1, { message: "Available At is required" }),
   availableUntil: z.string().min(1, { message: "Available Until is required" }),
   imageFile: z.custom((value) => {
@@ -65,6 +73,7 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
       description: data?.description || "",
       image: data?.image || "",
       type: data?.type || "",
+      deviceType: data?.deviceType || "",
       ctaUrl: data?.ctaUrl || "",
       availableAt: data?.availableAt
         ? new Date(data?.availableAt as string)?.toISOString().split("T")[0]
@@ -75,8 +84,6 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
       imageFile: null
     }
   });
-  console.log(form.formState.errors);
-  console.log(form.watch());
 
   const { mutateAsync: uploadFile, isPending: loadingUpload } = useUploadImage();
   const { mutateAsync: createBanner, isPending: loadingCreate } = useAddBanner();
@@ -100,6 +107,7 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
         availableAt: dataForm.availableAt,
         availableUntil: dataForm.availableUntil,
         ctaUrl: dataForm.ctaUrl,
+        deviceType: dataForm.deviceType,
         image: dataForm.imageFile ? uploadedImageUrl : data ? data.image : image?.data?.file_url
       };
       if (data) {
@@ -229,6 +237,49 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="deviceType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Device Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select device" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Dekstop">Dekstop</SelectItem>
+                      <SelectItem value="Mobile">Mobile</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="ctaUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel> CTA URL</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="description"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>example: https://www.example.com</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -260,24 +311,6 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
                   </FormItem>
                 );
               }}
-            />
-            <FormField
-              control={form.control}
-              name="ctaUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel> CTA URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="description"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>example: https://www.example.com</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
             />
           </div>
           <Button

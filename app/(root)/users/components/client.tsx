@@ -9,22 +9,35 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
 import { columns, UserColumn } from "./columns";
+import { usePagination } from "@/hooks/general/usePagination";
+import { useGetListUser } from "@/hooks/user/useGetListUser";
+import { useEffect } from "react";
 
 interface UserClientProps {
-  data: UserColumn[];
+  type?: string;
 }
 
-export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
-  const params = useParams();
+export const UsersClient: React.FC<UserClientProps> = ({ type }) => {
+  const { limit, onPaginationChange, skip, pagination } = usePagination();
   const router = useRouter();
 
-  console.log(data);
+  const { data: dataUser, mutateAsync, isPending } = useGetListUser();
+
+  const pageCount = dataUser?.meta?.totalPage || 0;
+
+  useEffect(() => {
+    mutateAsync({
+      page: skip / limit + 1,
+      limit: limit
+    });
+  }, [skip, limit, mutateAsync]);
+
   return (
     <>
       <div className="flex items-center justify-between">
         <Heading
-          title={`User (${data.length})`}
-          description="Manage user "
+          title={type === "admin" ? "Admin User" : "All User"}
+          description={type === "admin" ? "List of admin user" : "List of all user"}
         />
         <Button onClick={() => router.push(`/users/new`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
@@ -32,9 +45,12 @@ export const UsersClient: React.FC<UserClientProps> = ({ data }) => {
       </div>
       <Separator />
       <DataTable
-        searchKey="email"
         columns={columns}
-        data={data}
+        data={dataUser?.data || []}
+        isLoading={isPending}
+        onPaginationChange={onPaginationChange}
+        pageCount={pageCount}
+        pagination={pagination}
       />
 
       <Separator />

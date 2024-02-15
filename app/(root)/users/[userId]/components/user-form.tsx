@@ -71,6 +71,8 @@ export const UserForm = ({ data }: UserFormProps) => {
     }
   });
 
+  // console.log(form.watch());
+
   const onSubmit = async (dataForm: UserFormValues) => {
     try {
       setLoading(true);

@@ -73,9 +73,13 @@ export class RequestAdapter {
   public sendPostRequest<B, T>(
     url: string,
     data?: B,
+    params?: AxiosRequestConfig["params"],
     config?: InternalAxiosRequestConfig
   ): Promise<AxiosResponse<T>> {
-    return this.adapter.post<B, AxiosResponse<T>>(url, data, config);
+    return this.adapter.post<B, AxiosResponse<T>>(url, data, {
+      ...config,
+      params
+    });
   }
 
   public sendPutRequest<B, T>(

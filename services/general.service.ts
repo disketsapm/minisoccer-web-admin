@@ -15,12 +15,17 @@ export class GeneralService extends RequestAdapter {
       formData.append("file", file);
       formData.append("type", type);
 
-      const response = await this.sendPostRequest<any, any>(`/file`, formData, {
-        //@ts-ignore
-        headers: {
-          "Content-Type": "multipart/form-data"
+      const response = await this.sendPostRequest<any, any>(
+        `/file`,
+        formData,
+        {},
+        {
+          //@ts-ignore
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         }
-      });
+      );
 
       return response.data;
     } catch (error) {

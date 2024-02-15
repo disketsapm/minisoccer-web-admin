@@ -1,49 +1,156 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+  getFilteredRowModel,
+  VisibilityState
+} from "@tanstack/react-table";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { PaginationTable } from "../shared/pagination-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchKey: string;
+  isLoading?: boolean;
+  onPaginationChange: any;
+  pageCount: number;
+  pagination: any;
 }
 
-export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  isLoading,
+  onPaginationChange,
+  pageCount,
+  pagination
+}: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [filtering, setFiltering] = useState("");
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
+    manualPagination: true,
+    onPaginationChange,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
-      columnFilters,
+      pagination,
+      sorting,
+      columnVisibility,
+      globalFilter: filtering
     },
+    onGlobalFilterChange: setFiltering,
+    pageCount
   });
 
   return (
-    <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Search"
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn(searchKey)?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
+    <div className="w-full">
+      <div className="flex justify-between items-center gap-5 py-3">
+        <div className="flex justify-center items-baseline gap-x-2">
+          <p className="text-sm">Show</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="ml-auto"
+              >
+                {table.options.state.pagination?.pageSize}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="min-w-[2rem]"
+              align="start"
+            >
+              {[1, 2, 3].map((size) => (
+                <DropdownMenuCheckboxItem
+                  key={size}
+                  className="capitalize"
+                  checked={table.options.state.pagination?.pageSize === size}
+                  onCheckedChange={() => {
+                    table.setPageSize(size);
+                  }}
+                >
+                  {size}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <p className="text-sm">Entries</p>
+        </div>
+        <div className="flex gap-5">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="ml-auto"
+              >
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide() && column.id !== "actions")
+                .map((column) => {
+                  const columnName = column.id
+                    .replace(/_/g, " ")
+                    .toLowerCase()
+                    .replace(/(?:^|\s)\S/g, function (a) {
+                      return a.toUpperCase();
+                    });
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {columnName}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Input
+            placeholder={`Search...`}
+            value={filtering}
+            onChange={(e: any) => setFiltering(e.target.value)}
+            className="max-w-sm"
+          />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -53,7 +160,9 @@ export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTable
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -62,13 +171,15 @@ export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTable
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
@@ -78,30 +189,16 @@ export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTable
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {isLoading ? "Fetching Data..." : "No results."}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+
+      <div className="flex items-center justify-end py-4">
+        <PaginationTable tableLib={table} />
       </div>
     </div>
   );

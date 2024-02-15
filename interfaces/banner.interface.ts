@@ -5,6 +5,7 @@ export interface Banner {
   image: string;
   type: string;
   ctaUrl: string;
+  deviceType: string;
   availableAt: string;
   availableUntil: string;
 }

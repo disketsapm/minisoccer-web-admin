@@ -1,15 +1,13 @@
-'use client';
+"use client";
 
-import { BannerClient } from './components/client';
-import { useGetBanners } from '@/hooks/banner/useGetBanners';
+import { BannerClient } from "./components/client";
+import { useGetBanners } from "@/hooks/banner/useGetBanners";
 
 const BannerPage = () => {
-  const { data } = useGetBanners();
-
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BannerClient data={data?.data ?? []} />
+        <BannerClient />
       </div>
     </div>
   );

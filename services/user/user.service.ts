@@ -11,11 +11,13 @@ export class UserService extends RequestAdapter {
   constructor() {
     super();
   }
-  public async getListUser(): Promise<BaseResponse<Array<GetListUserResponse>>> {
+  public async getListUser(params?: any): Promise<BaseResponse<Array<GetListUserResponse>>> {
+    console.log(params);
     try {
       const response = await this.sendPostRequest<object, BaseResponse<Array<GetListUserResponse>>>(
         `/users`,
-        {}
+        {},
+        params
       );
       return response.data;
     } catch (error) {
