@@ -1,32 +1,47 @@
-"use client";
+'use client';
 
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import { Heading } from '@/components/ui/heading';
+import { Separator } from '@/components/ui/separator';
 
-import { columns, BannerColumn } from "./columns";
-import { usePagination } from "@/hooks/general/usePagination";
-import { useGetBanners } from "@/hooks/banner/useGetBanners";
-import { useEffect } from "react";
+import { columns, BannerColumn } from './columns';
+import { usePagination } from '@/hooks/general/usePagination';
+import { useGetBanners } from '@/hooks/banner/useGetBanners';
+import { useEffect, useState } from 'react';
+import { useSorting } from '@/hooks/general/useSorting';
 
 export const BannerClient = () => {
   const router = useRouter();
   const { limit, onPaginationChange, skip, pagination } = usePagination();
-
-  const { data: dataBanner, mutateAsync, isPending } = useGetBanners();
+  const { sorting, onSortingChange, field, order } = useSorting();
+  const [params, setParams] = useState({
+    page: Math.floor(skip / limit) + 1,
+    limit,
+    columnName: field,
+    filterType: order,
+    search: '',
+  });
+  const { data: dataBanner, isPending } = useGetBanners(params);
 
   const pageCount = dataBanner?.meta?.totalPage || 0;
 
+  const handleFilter = (value: string) => {
+    setParams({ ...params, search: value });
+  };
+
   useEffect(() => {
-    mutateAsync({
-      page: skip / limit + 1,
-      limit: limit
+    setParams({
+      page: Math.floor(skip / limit) + 1,
+      limit: limit,
+      columnName: field ?? undefined,
+      filterType: order ?? undefined,
+      search: params.search,
     });
-  }, [skip, limit, mutateAsync]);
+  }, [skip, limit, field, order, params.search]);
 
   return (
     <>
@@ -47,6 +62,9 @@ export const BannerClient = () => {
         onPaginationChange={onPaginationChange}
         pageCount={pageCount}
         pagination={pagination}
+        filter={handleFilter}
+        sorting={sorting}
+        onSortingChange={onSortingChange}
       />
 
       <Separator />

@@ -8,7 +8,7 @@ export function useAddBanner() {
   return useMutation<any, string, Banner>({
     mutationFn: (payload) => bannerService.createBanner(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getBanners'] });
+      queryClient.invalidateQueries({ queryKey: ['listBanner'] });
     },
   });
 }

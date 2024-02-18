@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BannerService } from "@/services/banner/banner.service";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { BannerService } from '@/services/banner/banner.service';
 
 export function useDeletebanner() {
   const bannerService = new BannerService();
@@ -8,7 +8,7 @@ export function useDeletebanner() {
   return useMutation<string, string, any>({
     mutationFn: (payload) => bannerService.deleteBanner(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getBanners"] });
-    }
+      queryClient.invalidateQueries({ queryKey: ['listBanner'] });
+    },
   });
 }

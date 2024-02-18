@@ -1,12 +1,12 @@
-import { UserForm } from "./components/user-form";
-import { UserService } from "@/services/user/user.service";
+import { UserForm } from './components/user-form';
+import { UserService } from '@/services/user/user.service';
 
 const UserPage = async ({ params }: { params: { userId: string } }) => {
   const userService = new UserService();
 
   let response: any = {};
-  if (params.userId !== "new") {
-    response = await userService.getUserById({ _id: params.userId });
+  if (params.userId !== 'new') {
+    response = await userService.getListUser({ _id: params.userId });
   }
   return (
     <div className="flex-col">

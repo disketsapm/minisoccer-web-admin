@@ -1,12 +1,12 @@
-import { BannerService } from "@/services/banner/banner.service";
-import { BannerForm } from "./components/banner-form";
+import { BannerService } from '@/services/banner/banner.service';
+import { BannerForm } from './components/banner-form';
 
 const BannerPage = async ({ params }: { params: { bannerId: string } }) => {
   const bannerService = new BannerService();
 
   let response: any = {};
-  if (params.bannerId !== "new") {
-    response = await bannerService.getBannerById({ _id: params.bannerId });
+  if (params.bannerId !== 'new') {
+    response = await bannerService.getBanners({ _id: params.bannerId });
   }
   return (
     <div className="flex-col">
