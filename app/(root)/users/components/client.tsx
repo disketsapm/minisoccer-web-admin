@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { Plus } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { Plus } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 
-import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
-import { Separator } from '@/components/ui/separator';
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
 
-import { columns, UserColumn } from './columns';
-import { usePagination } from '@/hooks/general/usePagination';
-import { useGetListUser } from '@/hooks/user/useGetListUser';
-import { useEffect, useState } from 'react';
-import { useSorting } from '@/hooks/general/useSorting';
+import { columns, UserColumn } from "./columns";
+import { usePagination } from "@/hooks/general/usePagination";
+import { useGetListUser } from "@/hooks/user/useGetListUser";
+import { useEffect, useState } from "react";
+import { useSorting } from "@/hooks/general/useSorting";
 
 interface UserClientProps {
   type?: string;
@@ -30,7 +30,7 @@ export const UsersClient: React.FC<UserClientProps> = ({ type }) => {
     roles: type ?? undefined,
     columnName: field,
     filterType: order,
-    search: '',
+    search: ""
   });
 
   const handleFilter = (value: string) => {
@@ -47,7 +47,7 @@ export const UsersClient: React.FC<UserClientProps> = ({ type }) => {
       roles: type ?? undefined,
       columnName: field ?? undefined,
       filterType: order ?? undefined,
-      search: params.search,
+      search: params.search
     });
   }, [skip, limit, field, order, params.search, type]);
 
@@ -55,8 +55,8 @@ export const UsersClient: React.FC<UserClientProps> = ({ type }) => {
     <>
       <div className="flex items-center justify-between">
         <Heading
-          title={type ?? 'All User'}
-          description={type ? `list of all ${type}` : 'List of all user'}
+          title={type ?? "All User"}
+          description={type ? `list of all ${type}` : "List of all user"}
         />
         <Button onClick={() => router.push(`/users/new`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
@@ -65,7 +65,7 @@ export const UsersClient: React.FC<UserClientProps> = ({ type }) => {
       <Separator />
       <DataTable
         columns={columns}
-        data={dataUser?.data || []}
+        data={dataUser?.data ?? []}
         isLoading={isPending}
         onPaginationChange={onPaginationChange}
         onSortingChange={onSortingChange}
