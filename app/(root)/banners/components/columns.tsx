@@ -40,7 +40,7 @@ export const columns: ColumnDef<BannerColumn>[] = [
   },
   {
     accessorKey: "image_mobile",
-    header: "Image Desktop",
+    header: "Image Mobile",
     cell: ({ row }) => (
       <Image
         src={row.original.image_mobile}

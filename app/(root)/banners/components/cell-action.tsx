@@ -21,8 +21,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { mutateAsync: deleteBanner } = useDeletebanner();
   const { mutateAsync: deleteFile } = useDeleteFile();
   const onConfirm = async () => {
-    const filename = extractFilenameFromURL(data?.image);
-    await deleteFile({ filename: filename });
+    const fileImageMobile = extractFilenameFromURL(data?.image_mobile);
+    const fileImageDesktop = extractFilenameFromURL(data?.image_desktop);
+
+    // Delete both mobile and desktop images
+    await deleteFile({ filename: fileImageMobile });
+    await deleteFile({ filename: fileImageDesktop });
     await deleteBanner({
       _id: data?._id
     });

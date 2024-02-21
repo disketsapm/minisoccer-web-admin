@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BannerService } from "@/services/banner/banner.service";
+import toast from "react-hot-toast";
 
 export function useUpdateActiveBanner() {
   const bannerService = new BannerService();
@@ -10,6 +11,11 @@ export function useUpdateActiveBanner() {
       bannerService.updateActiveBanner(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["listBanner"] });
+      toast.success("Updated status successfully");
+    },
+    onError: (error: any) => {
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   });
 }
