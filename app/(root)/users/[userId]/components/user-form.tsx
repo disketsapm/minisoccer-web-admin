@@ -1,34 +1,21 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import * as z from 'zod';
+import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useParams, useRouter } from 'next/navigation';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import { Heading } from "@/components/ui/heading";
-import { GetListUserResponse } from "@/interfaces/user.interface";
-import { useAddUser } from "@/hooks/user/useAddUser";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { useUpdateUser } from "@/hooks/user/useUpdateUser";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Separator } from '@/components/ui/separator';
+import { Heading } from '@/components/ui/heading';
+import { GetListUserResponse } from '@/interfaces/user.interface';
+import { useAddUser } from '@/hooks/user/useAddUser';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useUpdateUser } from '@/hooks/user/useUpdateUser';
 // import { AlertModal } from "@/components/modals/alert-modal"
 
 const formSchema = z.object({
@@ -37,7 +24,7 @@ const formSchema = z.object({
   password: z.string().min(6),
   fullName: z.string().min(1),
   phoneNumber: z.string().min(1),
-  roles: z.string().min(1)
+  roles: z.string().min(1),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
@@ -54,21 +41,20 @@ export const UserForm = ({ data }: UserFormProps) => {
   const { mutateAsync: updateUser } = useUpdateUser();
   const [loading, setLoading] = useState(false);
 
-  const description = data ? "Edit a User." : "Add a new User";
-  const title = data ? "Edit User" : "Create User";
-  const toastMessage = data ? "User updated." : "User created.";
-  const action = data ? "Save changes" : "Create";
+  const description = data ? 'Edit a User.' : 'Add a new User';
+  const title = data ? 'Edit User' : 'Create User';
+  const action = data ? 'Save changes' : 'Create';
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      _id: data?._id ?? "",
-      email: data?.email ?? "",
-      password: data?.password ?? "",
-      fullName: data?.fullName ?? "",
-      phoneNumber: data?.phoneNumber ?? "",
-      roles: data?.roles ?? ""
-    }
+      _id: data?._id ?? '',
+      email: data?.email ?? '',
+      password: data?.password ?? '',
+      fullName: data?.fullName ?? '',
+      phoneNumber: data?.phoneNumber ?? '',
+      roles: data?.roles ?? '',
+    },
   });
 
   // console.log(form.watch());
@@ -81,11 +67,8 @@ export const UserForm = ({ data }: UserFormProps) => {
       } else {
         addUser(dataForm);
       }
-      router.refresh();
-      router.push(`/users`);
-      toast.success(toastMessage);
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      toast.error('Something went wrong.');
     } finally {
       setLoading(false);
     }
@@ -107,7 +90,7 @@ export const UserForm = ({ data }: UserFormProps) => {
         >
           <input
             type="hidden"
-            {...form.register("_id")}
+            {...form.register('_id')}
           />
           <div className="md:grid md:grid-cols-2 gap-8">
             <FormField

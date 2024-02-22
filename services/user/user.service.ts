@@ -39,6 +39,7 @@ export class UserService extends RequestAdapter {
 
       return response.data;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
