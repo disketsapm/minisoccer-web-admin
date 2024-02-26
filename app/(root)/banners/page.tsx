@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
-import { BannerClient } from "./components/client";
-import { useGetBanners } from "@/hooks/banner/useGetBanners";
+import { BannerClient } from './components/client';
 
 const BannerPage = () => {
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import * as z from 'zod';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -20,6 +20,7 @@ import { useUpdateBanner } from '@/hooks/banner/useUpdateBanner';
 import { useDeleteFile } from '@/hooks/general/useDeleteImage';
 import ImageCropper from '@/components/shared/image-croping';
 import { DialogCropImage } from '@/components/shared/dialog-crop-image';
+import { fetchBlob } from '@/lib/utils';
 
 const formSchema = z.object({
   title: z.string().min(1, { message: 'Title is required' }),
@@ -43,11 +44,7 @@ const formSchema = z.object({
 
 type BannerFormValues = z.infer<typeof formSchema>;
 
-interface BannerFormProps {
-  data?: Banner;
-}
-
-export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
+export const BannerForm = ({ data }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,15 +61,6 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
 
   const form = useForm<BannerFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: data?.title || '',
-      description: data?.description || '',
-      image_desktop: data?.image_desktop || '',
-      image_mobile: data?.image_mobile || '',
-      ctaUrl: data?.ctaUrl || '',
-      imageDesktop: null,
-      imageMobile: null,
-    },
   });
 
   const { mutateAsync: uploadFile, isPending: loadingUpload } = useUploadImage();
@@ -83,22 +71,22 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
   const imageMobile = form.watch('imageMobile');
 
   const onSubmit = async (dataForm: BannerFormValues) => {
-    console.log(dataForm);
     try {
       let uploadedImageUrlDesktop = null;
       let uploadedImageUrlMobile = null;
-      if (dataForm.imageDesktop) {
-        const uploadedImageDesktop = await uploadFile({
-          file: dataForm.imageDesktop,
-          type: 'Homepage',
-        });
 
+      if (cropImage.desktop) {
+        const imageBlobDesktop = await fetchBlob(cropImage.desktop);
+        const uploadedImageDesktop = await uploadFile({
+          file: imageBlobDesktop,
+        });
         uploadedImageUrlDesktop = uploadedImageDesktop.data.file_url;
       }
-      if (dataForm.imageMobile) {
+
+      if (cropImage.mobile) {
+        const imageBlobMobile = await fetchBlob(cropImage.mobile);
         const uploadedImageMobile = await uploadFile({
-          file: dataForm.imageMobile,
-          type: 'Homepage',
+          file: imageBlobMobile,
         });
         uploadedImageUrlMobile = uploadedImageMobile.data.file_url;
       }
@@ -135,9 +123,17 @@ export const BannerForm: React.FC<BannerFormProps> = ({ data }) => {
   };
 
   useEffect(() => {
+    form.setValue('title', data?.title || '');
+    form.setValue('description', data?.description || '');
+    form.setValue('image_desktop', data?.image_desktop || '');
+    form.setValue('image_mobile', data?.image_mobile || '');
+    form.setValue('ctaUrl', data?.ctaUrl || '');
+  }, [data]);
+
+  useEffect(() => {
     form.setValue('image_desktop', cropImage?.desktop || data?.image_desktop || '');
     form.setValue('image_mobile', cropImage.mobile || data?.image_mobile || '');
-  }, [data, cropImage]);
+  }, [cropImage]);
 
   const imageUrlDekstop = imageDesktop ? URL.createObjectURL(imageDesktop) : null;
   const imageUrlMobile = imageMobile ? URL.createObjectURL(imageMobile) : null;

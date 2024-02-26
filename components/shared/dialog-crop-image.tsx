@@ -35,7 +35,7 @@ export function DialogCropImage({ imageUrl, setCropComplete, open, onOpenChange,
         <ImageCropper
           imageSrc={imageUrl || ''}
           setCroppedImageFor={setCroppedImage}
-          aspect={typeImage === 'desktop' ? 16 / 9 : 4 / 3}
+          aspect={typeImage === 'desktop' ? 18 / 9 : 4 / 5}
         />
       </DialogContent>
     </Dialog>

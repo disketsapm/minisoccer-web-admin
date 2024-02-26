@@ -1,23 +1,33 @@
-"use client";
+'use client';
 
-import { LayoutDashboard, Settings } from "lucide-react";
-import SidebarHeader from "./sidebar-header";
-import SidebarMenu from "./sidebar-menu";
-import { useSidebar } from "@/store/sidebar-store";
+import { BookKey, CircleUserRound, Layers2, TicketCheck } from 'lucide-react';
+import SidebarHeader from './sidebar-header';
+import SidebarMenu from './sidebar-menu';
+import { useSidebar } from '@/store/sidebar-store';
 
 const Sidebar = () => {
   const { isOpen } = useSidebar();
   const menus = [
     {
-      title: "Users",
-      icon: <LayoutDashboard className="text-white text-3xl rounded cursor-pointer" />,
-      link: "/users"
+      title: 'Kelola Akun',
+      icon: <CircleUserRound className="text-white text-3xl rounded cursor-pointer" />,
+      link: '/users',
     },
     {
-      title: "Banners",
-      icon: <LayoutDashboard className="text-white text-3xl rounded cursor-pointer" />,
-      link: "/banners"
-    }
+      title: 'Kelola Banner',
+      icon: <TicketCheck className="text-white text-3xl rounded cursor-pointer" />,
+      link: '/banners',
+    },
+    {
+      title: 'Kelola Lapang',
+      icon: <Layers2 className="text-white text-3xl rounded cursor-pointer" />,
+      link: '/fields',
+    },
+    {
+      title: 'Data Resevasi Lapang',
+      icon: <BookKey className="text-white text-3xl rounded cursor-pointer" />,
+      link: '/booking',
+    },
   ];
 
   return (

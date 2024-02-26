@@ -50,8 +50,12 @@ export const BannerClient = () => {
           title={`Banner `}
           description="Manage Banner "
         />
-        <Button onClick={() => router.push(`/banners/new`)}>
-          <Plus className="mr-2 h-4 w-4" /> Add New
+        <Button
+          variant={'outlineDanger'}
+          className="bg-red-500 text-white border-2 border-black hover:bg-red-500 hover:text-white"
+          onClick={() => router.push(`/banners/new`)}
+        >
+          <Plus className="mr-2 h-4 w-4" /> Tambah Banner Baru
         </Button>
       </div>
       <Separator />

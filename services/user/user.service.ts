@@ -8,9 +8,8 @@ export class UserService extends RequestAdapter {
     super();
   }
   public async getListUser(params?: any): Promise<BaseResponse<Array<GetListUserResponse>>> {
-    console.log(params);
     try {
-      const response = await this.sendGetRequest<BaseResponse<Array<GetListUserResponse>>>(`/users`, params);
+      const response = await this.sendGetRequest<BaseResponse<Array<GetListUserResponse>>>(`/admin/users`, params);
       return response.data;
     } catch (error) {
       throw error;
@@ -19,7 +18,7 @@ export class UserService extends RequestAdapter {
 
   public async getUserById(payload: { _id: string }): Promise<BaseResponse<GetListUserResponse>> {
     try {
-      const response = await this.sendPostRequest<object, BaseResponse<GetListUserResponse>>(`/users`, payload);
+      const response = await this.sendPostRequest<object, BaseResponse<GetListUserResponse>>(`/admin/users`, payload);
 
       return response.data;
     } catch (error) {
@@ -29,7 +28,7 @@ export class UserService extends RequestAdapter {
 
   public async createUser({ email, password, fullName, phoneNumber, roles }: CreateUserRequest) {
     try {
-      const response = await this.sendPostRequest<CreateUserRequest, string>(`/user`, {
+      const response = await this.sendPostRequest<CreateUserRequest, string>(`/admin/user`, {
         email,
         password,
         fullName,
@@ -46,7 +45,7 @@ export class UserService extends RequestAdapter {
 
   public async updateUser({ _id, email, password, fullName, phoneNumber, roles }: UpdateUserRequest) {
     try {
-      const response = await this.sendPutRequest<UpdateUserRequest, string>(`/user`, {
+      const response = await this.sendPutRequest<UpdateUserRequest, string>(`/admin/user`, {
         _id,
         email,
         password,
@@ -63,7 +62,7 @@ export class UserService extends RequestAdapter {
 
   public async deleteUser(payload: { _id: string }) {
     try {
-      const response = await this.sendDeleteRequest<object, string>(`/user`, payload);
+      const response = await this.sendDeleteRequest<object, string>(`/admin/user`, payload);
       return response.data;
     } catch (error) {
       throw error;

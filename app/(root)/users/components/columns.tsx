@@ -20,19 +20,19 @@ export const columns: ColumnDef<UserColumn>[] = [
   },
   {
     accessorKey: 'fullName',
-    header: 'Fullname',
+    header: 'Nama Lengkap',
   },
   {
     accessorKey: 'phoneNumber',
-    header: 'Phone Number',
+    header: 'No. Telepon',
   },
   {
     accessorKey: 'roles',
-    header: 'Roles',
+    header: 'Jenis Akun',
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created At',
+    header: 'Dibuat Tanggal',
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
   },
   {
