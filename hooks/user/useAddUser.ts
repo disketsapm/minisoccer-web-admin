@@ -9,7 +9,7 @@ export function useAddUser() {
   return useMutation<string, string, CreateUserRequest>({
     mutationFn: (payload) => userService.createUser(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getListUser'] });
+      queryClient.invalidateQueries({ queryKey: ['listUser'] });
     },
   });
 }

@@ -1,15 +1,44 @@
 'use client';
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UsersClient } from './components/client';
-import { useGetListUser } from '@/hooks/user/useGetListUser';
 
 const UserPage = () => {
-  const { data, error } = useGetListUser();
-
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <UsersClient data={data?.results ?? []} />
+        <Tabs defaultValue="all">
+          <TabsList>
+            <TabsTrigger value="all">All Role</TabsTrigger>
+            <TabsTrigger value="Admin">Admin</TabsTrigger>
+            <TabsTrigger value="Cashier">Cashier</TabsTrigger>
+            <TabsTrigger value="Customer">Customer</TabsTrigger>
+          </TabsList>
+          <TabsContent
+            className="space-y-4 p-8 pt-6"
+            value="all"
+          >
+            <UsersClient />
+          </TabsContent>
+          <TabsContent
+            className="space-y-4 p-8 pt-6"
+            value="Admin"
+          >
+            <UsersClient type="Admin" />
+          </TabsContent>
+          <TabsContent
+            className="space-y-4 p-8 pt-6"
+            value="Cashier"
+          >
+            <UsersClient type="Cashier" />
+          </TabsContent>
+          <TabsContent
+            className="space-y-4 p-8 pt-6"
+            value="Customer"
+          >
+            <UsersClient type="Customer" />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

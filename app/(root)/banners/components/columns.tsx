@@ -1,78 +1,106 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from "@tanstack/react-table";
 
-import { CellAction } from './cell-action';
-import { Banner } from '@/interfaces/banner.interface';
-import Image from 'next/image';
+import { CellAction } from "./cell-action";
+import { Banner } from "@/interfaces/banner.interface";
+import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { useUpdateActiveBanner } from "@/hooks/banner/useUpdateActiveBanner";
 
 export type BannerColumn = Banner;
 
 export const columns: ColumnDef<BannerColumn>[] = [
   {
-    accessorKey: 'title',
-    header: 'Title',
+    accessorKey: "title",
+    header: "Title"
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
+    accessorKey: "description",
+    header: "Description"
   },
   {
-    accessorKey: 'image',
-    header: 'Image',
+    accessorKey: "image_desktop",
+    header: "Image Desktop",
     cell: ({ row }) => (
       <Image
-        src={row.original.image}
+        src={row.original.image_desktop}
         alt="banner"
         width={400}
         height={400}
         objectFit="cover"
       />
-    ),
+    )
   },
   {
-    accessorKey: 'type',
-    header: 'Type',
-  },
-  {
-    accessorKey: 'ctaUrl',
-    header: 'CTA Url',
+    accessorKey: "image_mobile",
+    header: "Image Mobile",
     cell: ({ row }) => (
       <Image
-        src={row.original.ctaUrl}
+        src={row.original.image_mobile}
         alt="banner"
         width={400}
         height={400}
         objectFit="cover"
       />
-    ),
+    )
   },
   {
-    accessorKey: 'ctaCount',
-    header: 'CTA Count',
+    accessorKey: "type",
+    header: "Type"
   },
   {
-    accessorKey: 'viewCount',
-    header: 'View Count',
+    accessorKey: "ctaUrl",
+    header: "CTA Url"
   },
   {
-    accessorKey: 'availableAt',
-    header: 'Available At',
+    accessorKey: "ctaCount",
+    header: "CTA Count"
   },
   {
-    accessorKey: 'availableUntil',
-    header: 'Available Until',
+    accessorKey: "viewCount",
+    header: "View Count"
   },
+
   {
-    accessorKey: 'updatedAt',
-    header: 'Updated At',
+    accessorKey: "isActive",
+    header: "Status",
+    cell: ({ row }) => {
+      const isActive = row.original.isActive;
+      const { mutateAsync } = useUpdateActiveBanner();
+      const updateStatus = async (newStatus: boolean) => {
+        mutateAsync({ _id: row.original._id, isActive: newStatus });
+      };
+      return (
+        <>
+          <Select
+            onValueChange={(e) => updateStatus(e === "true" ? true : false)}
+            value=""
+          >
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder={isActive ? "active" : "inactive"} />
+            </SelectTrigger>
+            <SelectContent>
+              {!isActive ? (
+                <SelectItem value="true">Active</SelectItem>
+              ) : (
+                <SelectItem value="false">Inactive</SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+        </>
+      );
+    }
   },
+
   {
-    accessorKey: 'createdAt',
-    header: 'Created At',
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />,
-  },
+    id: "actions",
+    cell: ({ row }) => <CellAction data={row.original} />
+  }
 ];

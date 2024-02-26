@@ -5,25 +5,25 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 
 export type UserColumn = {
-  _id?: number;
-  username: string;
-  fullname: string;
-  phone: string;
+  _id?: string;
+  email: string;
+  fullName: string;
+  phoneNumber: string;
   roles: string;
   createdAt: string;
 };
 
 export const columns: ColumnDef<UserColumn>[] = [
   {
-    accessorKey: 'username',
-    header: 'Username',
+    accessorKey: 'email',
+    header: 'Email',
   },
   {
-    accessorKey: 'fullname',
+    accessorKey: 'fullName',
     header: 'Fullname',
   },
   {
-    accessorKey: 'phone',
+    accessorKey: 'phoneNumber',
     header: 'Phone Number',
   },
   {
@@ -33,6 +33,7 @@ export const columns: ColumnDef<UserColumn>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Created At',
+    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
   },
   {
     id: 'actions',

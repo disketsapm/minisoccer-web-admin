@@ -8,8 +8,18 @@ export class UserService extends RequestAdapter {
     super();
   }
   public async getListUser(params?: any): Promise<BaseResponse<Array<GetListUserResponse>>> {
+    console.log(params);
     try {
-      const response = await this.sendGetRequest<BaseResponse<Array<GetListUserResponse>>>(`/user`, params);
+      const response = await this.sendGetRequest<BaseResponse<Array<GetListUserResponse>>>(`/users`, params);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getUserById(payload: { _id: string }): Promise<BaseResponse<GetListUserResponse>> {
+    try {
+      const response = await this.sendPostRequest<object, BaseResponse<GetListUserResponse>>(`/users`, payload);
 
       return response.data;
     } catch (error) {
@@ -17,24 +27,13 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async getUserById(id: number): Promise<BaseResponse<GetListUserResponse>> {
-    try {
-      const response = await this.sendGetRequest<BaseResponse<GetListUserResponse>>(`/user/${id}`);
-
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  public async createUser({ username, email, password, fullname, phone, roles }: CreateUserRequest) {
+  public async createUser({ email, password, fullName, phoneNumber, roles }: CreateUserRequest) {
     try {
       const response = await this.sendPostRequest<CreateUserRequest, string>(`/user`, {
-        username,
         email,
         password,
-        fullname,
-        phone,
+        fullName,
+        phoneNumber,
         roles,
       });
 
@@ -44,14 +43,14 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async updateUser({ id, username, email, password, fullname, phone, roles }: UpdateUserRequest) {
+  public async updateUser({ _id, email, password, fullName, phoneNumber, roles }: UpdateUserRequest) {
     try {
-      const response = await this.sendPostRequest<UpdateUserRequest, string>(`/user/${id}`, {
-        username,
+      const response = await this.sendPutRequest<UpdateUserRequest, string>(`/user`, {
+        _id,
         email,
         password,
-        fullname,
-        phone,
+        fullName,
+        phoneNumber,
         roles,
       });
 
@@ -61,9 +60,9 @@ export class UserService extends RequestAdapter {
     }
   }
 
-  public async deleteUser(id: number) {
+  public async deleteUser(payload: { _id: string }) {
     try {
-      const response = await this.sendDeleteRequest<string>(`/user/${id}`);
+      const response = await this.sendDeleteRequest<object, string>(`/user`, payload);
       return response.data;
     } catch (error) {
       throw error;
