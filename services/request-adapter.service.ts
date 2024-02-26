@@ -21,7 +21,7 @@ export class RequestAdapter {
     {
       const token = await getTokenFromLocalStorage();
       if (token) {
-        config.headers.Authorization = `${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       } else {
         console.log('no token');
       }
