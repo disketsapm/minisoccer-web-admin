@@ -21,12 +21,12 @@ const Sidebar = () => {
     {
       title: 'Kelola Lapang',
       icon: <Layers2 className="text-white text-3xl rounded cursor-pointer" />,
-      link: '/fields',
+      link: '#',
     },
     {
       title: 'Data Resevasi Lapang',
       icon: <BookKey className="text-white text-3xl rounded cursor-pointer" />,
-      link: '/booking',
+      link: '#',
     },
   ];
 

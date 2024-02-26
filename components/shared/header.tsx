@@ -22,8 +22,6 @@ const Header = () => {
     }
   }, []);
 
-  console.log(email);
-
   return (
     <header className="w-full border-b border-gray-300 flex justify-end py-3 px-5">
       <div className="flex gap-x-5">
@@ -36,18 +34,12 @@ const Header = () => {
             }
           }}
         >
-          <Avatar>
-            {/* Use a conditional rendering for AvatarImage and AvatarFallback */}
-            {email ? (
-              <>
-                <AvatarImage src="https://drive.google.com/file/d/1em-PVgw9RWYunZvZHdNrBUnRLu6Hl3lY/view?usp=sharing" />
-                <AvatarFallback>{email.charAt(0).toUpperCase()}</AvatarFallback>
-              </>
-            ) : (
-              // Provide a fallback if email is not available
-              <AvatarFallback>U</AvatarFallback>
-            )}
-          </Avatar>
+          {email && (
+            <Avatar>
+              <AvatarImage src="https://drive.google.com/file/d/1em-PVgw9RWYunZvZHdNrBUnRLu6Hl3lY/view?usp=sharing" />
+              <AvatarFallback>{email.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+          )}
         </Link>
       </div>
     </header>

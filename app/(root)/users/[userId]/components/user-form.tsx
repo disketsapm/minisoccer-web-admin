@@ -39,9 +39,11 @@ export const UserForm = ({ data }: any) => {
   const { mutateAsync: updateUser } = useUpdateUser();
   const [loading, setLoading] = useState(false);
 
-  const description = data ? 'Ubah a User.' : 'Buat akun untuk Admin, Kasir, maupun Customer.';
-  const title = data ? 'Ubah Akun' : 'Buat Akun';
-  const action = data ? 'Save changes' : 'Buat Akun';
+  const description = data
+    ? 'Perhatikan secara detail! Karena perubahan data akan memengaruhi akses pemilik akun.'
+    : 'Buat akun untuk Admin, Kasir, maupun Customer.';
+  const title = data ? 'Ubah Data Akun' : 'Buat Akun';
+  const action = data ? 'Simpan perubahan' : 'Buat Akun';
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
