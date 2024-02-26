@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 export function usePagination(initialSize = 10) {
   const [pagination, setPagination] = useState({
     pageSize: initialSize,
-    pageIndex: 0
+    pageIndex: 0,
   });
   const { pageSize, pageIndex } = pagination;
-  console.log(pagination);
 
   return {
     // table state
@@ -16,6 +15,6 @@ export function usePagination(initialSize = 10) {
     pagination,
     // API
     limit: pageSize,
-    skip: pageSize * pageIndex
+    skip: pageSize * pageIndex,
   };
 }

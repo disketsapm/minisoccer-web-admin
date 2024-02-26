@@ -1,35 +1,22 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import * as z from 'zod';
+import { use, useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useParams, useRouter } from 'next/navigation';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import { Heading } from "@/components/ui/heading";
-import { GetListUserResponse } from "@/interfaces/user.interface";
-import { useAddUser } from "@/hooks/user/useAddUser";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { useUpdateUser } from "@/hooks/user/useUpdateUser";
-// import { AlertModal } from "@/components/modals/alert-modal"
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Separator } from '@/components/ui/separator';
+import { Heading } from '@/components/ui/heading';
+import { GetListUserResponse } from '@/interfaces/user.interface';
+import { useAddUser } from '@/hooks/user/useAddUser';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useUpdateUser } from '@/hooks/user/useUpdateUser';
+import { FaBackspace } from 'react-icons/fa';
 
 const formSchema = z.object({
   _id: z.string(),
@@ -37,7 +24,7 @@ const formSchema = z.object({
   password: z.string().min(6),
   fullName: z.string().min(1),
   phoneNumber: z.string().min(1),
-  roles: z.string().min(1)
+  roles: z.string().min(1),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;
@@ -46,46 +33,46 @@ type UserFormProps = {
   data?: GetListUserResponse;
 };
 
-export const UserForm = ({ data }: UserFormProps) => {
-  console.log(data);
-  const params = useParams();
+export const UserForm = ({ data }: any) => {
   const router = useRouter();
   const { mutateAsync: addUser } = useAddUser();
   const { mutateAsync: updateUser } = useUpdateUser();
   const [loading, setLoading] = useState(false);
 
-  const description = data ? "Edit a User." : "Add a new User";
-  const title = data ? "Edit User" : "Create User";
-  const toastMessage = data ? "User updated." : "User created.";
-  const action = data ? "Save changes" : "Create";
+  const description = data
+    ? 'Perhatikan secara detail! Karena perubahan data akan memengaruhi akses pemilik akun.'
+    : 'Buat akun untuk Admin, Kasir, maupun Customer.';
+  const title = data ? 'Ubah Data Akun' : 'Buat Akun';
+  const action = data ? 'Simpan perubahan' : 'Buat Akun';
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      _id: data?._id ?? "",
-      email: data?.email ?? "",
-      password: data?.password ?? "",
-      fullName: data?.fullName ?? "",
-      phoneNumber: data?.phoneNumber ?? "",
-      roles: data?.roles ?? ""
-    }
   });
-
-  // console.log(form.watch());
+  useEffect(() => {
+    if (data) {
+      form.setValue('email', data.email);
+      form.setValue('fullName', data.fullName);
+      form.setValue('password', data.password);
+      form.setValue('phoneNumber', data.phoneNumber);
+      form.setValue('roles', data.roles);
+    }
+  }, [data]);
 
   const onSubmit = async (dataForm: UserFormValues) => {
+    const { _id, ...payload } = dataForm;
     try {
       setLoading(true);
       if (data) {
-        updateUser(dataForm);
+        const payloadUpdate = {
+          ...payload,
+          _id: data._id,
+        };
+        updateUser(payloadUpdate);
       } else {
-        addUser(dataForm);
+        addUser(payload);
       }
-      router.refresh();
-      router.push(`/users`);
-      toast.success(toastMessage);
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      toast.error('Something went wrong.');
     } finally {
       setLoading(false);
     }
@@ -93,7 +80,15 @@ export const UserForm = ({ data }: UserFormProps) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-start gap-2">
+        <Button
+          size={'default'}
+          variant={'outline'}
+          onClick={() => router.back()}
+        >
+          <FaBackspace className="mr-2" />
+          Kembali
+        </Button>
         <Heading
           title={title}
           description={description}
@@ -107,7 +102,7 @@ export const UserForm = ({ data }: UserFormProps) => {
         >
           <input
             type="hidden"
-            {...form.register("_id")}
+            {...form.register('_id')}
           />
           <div className="md:grid md:grid-cols-2 gap-8">
             <FormField
@@ -119,7 +114,7 @@ export const UserForm = ({ data }: UserFormProps) => {
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="email"
+                      placeholder="Email"
                       type="email"
                       {...field}
                     />
@@ -137,7 +132,7 @@ export const UserForm = ({ data }: UserFormProps) => {
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="password"
+                      placeholder="Kata Sandi"
                       type="password"
                       isPassword
                       showPasswordIcon
@@ -153,11 +148,11 @@ export const UserForm = ({ data }: UserFormProps) => {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Fullname</FormLabel>
+                  <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="fullname"
+                      placeholder="Nama Lengkap"
                       {...field}
                     />
                   </FormControl>
@@ -170,11 +165,11 @@ export const UserForm = ({ data }: UserFormProps) => {
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>No. Telepon</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="number"
+                      placeholder="No. Telepon"
                       type="number"
                       {...field}
                     />
@@ -189,19 +184,20 @@ export const UserForm = ({ data }: UserFormProps) => {
               name="roles"
               render={({ field }) => (
                 <FormItem className="col-span-2">
-                  <FormLabel>Roles</FormLabel>
+                  <FormLabel>Jenis Akun</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    {...field}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select role" />
+                        <SelectValue placeholder="Pilih Jenis Akun" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="Admin">Admin</SelectItem>
-                      <SelectItem value="Cashier">Cashier</SelectItem>
+                      <SelectItem value="Cashier">Kasir</SelectItem>
                       <SelectItem value="Customer">Customer</SelectItem>
                     </SelectContent>
                   </Select>

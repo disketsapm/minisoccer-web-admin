@@ -30,17 +30,17 @@ export function AlertDialogDelete({ onAction }: AlertDialogDelete) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>This action cannot be undone. This will permanently delete your data.</AlertDialogDescription>
+          <AlertDialogTitle>Apakah Anda Yakin?</AlertDialogTitle>
+          <AlertDialogDescription>Aksi ini tidak dapat diurungkan. Data yang dihapus tidak dapat dikembalikan.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Batalkan</AlertDialogCancel>
           <AlertDialogAction onClick={onAction}>
             <Button
               variant="destructive"
               className="gap-2"
             >
-              Continue
+              Hapus
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

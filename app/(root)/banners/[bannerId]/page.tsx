@@ -1,17 +1,15 @@
-import { BannerService } from '@/services/banner/banner.service';
+'use client';
+
 import { BannerForm } from './components/banner-form';
+import { useGetBanners } from '@/hooks/banner/useGetBanners';
 
-const BannerPage = async ({ params }: { params: { bannerId: string } }) => {
-  const bannerService = new BannerService();
+const BannerPage = ({ params }: { params: { bannerId: string } }) => {
+  const { data, isPending } = useGetBanners({ _id: params.bannerId });
 
-  let response: any = {};
-  if (params.bannerId !== 'new') {
-    response = await bannerService.getBanners({ _id: params.bannerId });
-  }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BannerForm data={response?.data ?? null} />
+        <BannerForm data={(data?.data as object) ?? null} />
       </div>
     </div>
   );

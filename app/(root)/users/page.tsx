@@ -9,10 +9,10 @@ const UserPage = () => {
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Tabs defaultValue="all">
           <TabsList>
-            <TabsTrigger value="all">All Role</TabsTrigger>
-            <TabsTrigger value="Admin">Admin</TabsTrigger>
-            <TabsTrigger value="Cashier">Cashier</TabsTrigger>
+            <TabsTrigger value="all">Semua Akun</TabsTrigger>
             <TabsTrigger value="Customer">Customer</TabsTrigger>
+            <TabsTrigger value="Cashier">Kasir</TabsTrigger>
+            <TabsTrigger value="Admin">Admin</TabsTrigger>
           </TabsList>
           <TabsContent
             className="space-y-4 p-8 pt-6"
@@ -22,9 +22,9 @@ const UserPage = () => {
           </TabsContent>
           <TabsContent
             className="space-y-4 p-8 pt-6"
-            value="Admin"
+            value="Customer"
           >
-            <UsersClient type="Admin" />
+            <UsersClient type="Customer" />
           </TabsContent>
           <TabsContent
             className="space-y-4 p-8 pt-6"
@@ -34,9 +34,9 @@ const UserPage = () => {
           </TabsContent>
           <TabsContent
             className="space-y-4 p-8 pt-6"
-            value="Customer"
+            value="Admin"
           >
-            <UsersClient type="Customer" />
+            <UsersClient type="Admin" />
           </TabsContent>
         </Tabs>
       </div>

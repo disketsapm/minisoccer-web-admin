@@ -1,5 +1,5 @@
-import LoginForm from "./_components/user-auth-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LoginForm from './components/user-auth-form';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const LoginPage = () => {
   return (

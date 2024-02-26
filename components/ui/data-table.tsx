@@ -103,7 +103,7 @@ export function DataTable<TData, TValue>({
               className="min-w-[2rem]"
               align="start"
             >
-              {[1, 2, 3].map((size) => (
+              {[10, 20, 30].map((size) => (
                 <DropdownMenuCheckboxItem
                   key={size}
                   className="capitalize"
@@ -117,16 +117,16 @@ export function DataTable<TData, TValue>({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <p className="text-sm">Entries</p>
+          <p className="text-sm">Data</p>
         </div>
         <div className="flex gap-5">
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 className="ml-auto"
               >
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                Kolom <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
@@ -152,9 +152,9 @@ export function DataTable<TData, TValue>({
                   );
                 })}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           <Input
-            placeholder={`Search...`}
+            placeholder={`Cari...`}
             onChange={(e: any) => debounced(e.target.value)}
             className="max-w-sm"
           />
@@ -165,6 +165,9 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                <TableHead className="cursor-pointer">
+                  <div className="flex gap-2 items-center">No</div>
+                </TableHead>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
@@ -189,6 +192,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
+                  <TableCell>{pagination.pageIndex * pagination.pageSize + rowIndex + 1}</TableCell>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
