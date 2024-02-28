@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { Plus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/ui/data-table';
-import { Heading } from '@/components/ui/heading';
-import { Separator } from '@/components/ui/separator';
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
 
-import { columns, BannerColumn } from './columns';
-import { usePagination } from '@/hooks/general/usePagination';
-import { useGetBanners } from '@/hooks/banner/useGetBanners';
-import { useEffect, useState } from 'react';
-import { useSorting } from '@/hooks/general/useSorting';
+import { columns, BannerColumn } from "./columns";
+import { usePagination } from "@/hooks/general/usePagination";
+import { useGetBanners } from "@/hooks/banner/useGetBanners";
+import { useEffect, useState } from "react";
+import { useSorting } from "@/hooks/general/useSorting";
 
 export const BannerClient = () => {
   const router = useRouter();
@@ -23,7 +23,7 @@ export const BannerClient = () => {
     limit,
     columnName: field,
     filterType: order,
-    search: '',
+    search: ""
   });
   const { data: dataBanner, isPending } = useGetBanners(params);
 
@@ -39,7 +39,7 @@ export const BannerClient = () => {
       limit: limit,
       columnName: field ?? undefined,
       filterType: order ?? undefined,
-      search: params.search,
+      search: params.search
     });
   }, [skip, limit, field, order, params.search]);
 
@@ -48,10 +48,10 @@ export const BannerClient = () => {
       <div className="flex items-center justify-between">
         <Heading
           title={`Banner `}
-          description="Manage Banner "
+          description="Kelola Banner "
         />
         <Button
-          variant={'outlineDanger'}
+          variant={"outlineDanger"}
           className="bg-red-500 text-white border-2 border-black hover:bg-red-500 hover:text-white"
           onClick={() => router.push(`/banners/new`)}
         >

@@ -1,12 +1,18 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from "@tanstack/react-table";
 
-import { CellAction } from './cell-action';
-import { Banner } from '@/interfaces/banner.interface';
-import Image from 'next/image';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useUpdateActiveBanner } from '@/hooks/banner/useUpdateActiveBanner';
+import { CellAction } from "./cell-action";
+import { Banner } from "@/interfaces/banner.interface";
+import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { useUpdateActiveBanner } from "@/hooks/banner/useUpdateActiveBanner";
 
 export type BannerColumn = Banner;
 
@@ -18,29 +24,35 @@ const StatusSelect = ({ isActive, _id }: any) => {
 
   return (
     <Select
-      onValueChange={(e) => updateStatus(e === 'true' ? true : false)}
+      onValueChange={(e) => updateStatus(e === "true" ? true : false)}
       value=""
     >
-      <SelectTrigger className="w-[100px]">
-        <SelectValue placeholder={isActive ? 'Active' : 'Inactive'} />
+      <SelectTrigger className="w-[130px]">
+        <SelectValue placeholder={isActive ? "Aktif" : "Tidak Aktif"} />
       </SelectTrigger>
-      <SelectContent>{!isActive ? <SelectItem value="true">Active</SelectItem> : <SelectItem value="false">Inactive</SelectItem>}</SelectContent>
+      <SelectContent>
+        {!isActive ? (
+          <SelectItem value="true">Aktif</SelectItem>
+        ) : (
+          <SelectItem value="false">Tidak Aktif</SelectItem>
+        )}
+      </SelectContent>
     </Select>
   );
 };
 
 export const columns: ColumnDef<BannerColumn>[] = [
   {
-    accessorKey: 'title',
-    header: 'Title',
+    accessorKey: "title",
+    header: "Judul"
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
+    accessorKey: "description",
+    header: "Deskripsi"
   },
   {
-    accessorKey: 'image_desktop',
-    header: 'Image Desktop',
+    accessorKey: "image_desktop",
+    header: "Banner Desktop",
     cell: ({ row }) => (
       <Image
         src={row.original.image_desktop}
@@ -49,11 +61,11 @@ export const columns: ColumnDef<BannerColumn>[] = [
         height={400}
         objectFit="cover"
       />
-    ),
+    )
   },
   {
-    accessorKey: 'image_mobile',
-    header: 'Image Mobile',
+    accessorKey: "image_mobile",
+    header: "Banner Mobile",
     cell: ({ row }) => (
       <Image
         src={row.original.image_mobile}
@@ -62,35 +74,35 @@ export const columns: ColumnDef<BannerColumn>[] = [
         height={400}
         objectFit="cover"
       />
-    ),
+    )
   },
 
   {
-    accessorKey: 'ctaUrl',
-    header: 'CTA Url',
+    accessorKey: "ctaUrl",
+    header: "Link Tujuan"
   },
   {
-    accessorKey: 'ctaCount',
-    header: 'CTA Count',
+    accessorKey: "ctaCount",
+    header: "Total Klik Banner"
   },
   {
-    accessorKey: 'viewCount',
-    header: 'View Count',
+    accessorKey: "viewCount",
+    header: "Total Banner Dilihat"
   },
 
   {
-    accessorKey: 'isActive',
-    header: 'Status',
+    accessorKey: "isActive",
+    header: "Status",
     cell: ({ row }) => (
       <StatusSelect
         isActive={row.original.isActive}
         _id={row.original._id}
       />
-    ),
+    )
   },
 
   {
-    id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />,
-  },
+    id: "actions",
+    cell: ({ row }) => <CellAction data={row.original} />
+  }
 ];

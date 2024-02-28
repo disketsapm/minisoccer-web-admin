@@ -1,33 +1,33 @@
-'use client';
+"use client";
 
-import { BookKey, CircleUserRound, Layers2, TicketCheck } from 'lucide-react';
-import SidebarHeader from './sidebar-header';
-import SidebarMenu from './sidebar-menu';
-import { useSidebar } from '@/store/sidebar-store';
+import { BookKey, CircleUserRound, Layers2, TicketCheck } from "lucide-react";
+import SidebarHeader from "./sidebar-header";
+import SidebarMenu from "./sidebar-menu";
+import { useSidebar } from "@/store/sidebar-store";
 
 const Sidebar = () => {
   const { isOpen } = useSidebar();
   const menus = [
     {
-      title: 'Kelola Akun',
+      title: "Kelola Akun",
       icon: <CircleUserRound className="text-white text-3xl rounded cursor-pointer" />,
-      link: '/users',
+      link: "/users"
     },
     {
-      title: 'Kelola Banner',
+      title: "Kelola Banner",
       icon: <TicketCheck className="text-white text-3xl rounded cursor-pointer" />,
-      link: '/banners',
+      link: "/banners"
     },
     {
-      title: 'Kelola Lapang',
+      title: "Kelola Lapang",
       icon: <Layers2 className="text-white text-3xl rounded cursor-pointer" />,
-      link: '#',
+      link: "#"
     },
     {
-      title: 'Data Resevasi Lapang',
+      title: "Data Reservasi Lapang",
       icon: <BookKey className="text-white text-3xl rounded cursor-pointer" />,
-      link: '#',
-    },
+      link: "#"
+    }
   ];
 
   return (
