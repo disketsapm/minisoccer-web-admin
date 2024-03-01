@@ -1,22 +1,25 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Link from 'next/link';
+import React, { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { useLogout } from "@/hooks/auth/useLogout";
 
 const Header = () => {
-  const [email, setEmail] = useState('');
+  const [dataUser, setDataUser] = useState({} as any);
+  const { mutateAsync: logout } = useLogout();
 
   useEffect(() => {
     // Only try to access localStorage when in the client-side environment
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
-        const user = JSON.parse(localStorage.getItem('user') as string);
-        if (user && user.email) {
-          setEmail(user.email);
+        const user = JSON.parse(localStorage.getItem("user") as string);
+        if (user) {
+          setDataUser(user);
         }
       } catch (error) {
-        console.error('Failed to parse user data from localStorage:', error);
+        console.error("Failed to parse user data from localStorage:", error);
         // Handle the error appropriately, e.g., redirect to login or show a message
       }
     }
@@ -28,17 +31,28 @@ const Header = () => {
         <Link
           href="/login"
           onClick={() => {
-            // Ensure this runs only on the client side
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('token');
+            if (typeof window !== "undefined") {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              setDataUser("");
+              if (dataUser?.token) {
+                logout({ token: dataUser?.token });
+              }
             }
           }}
         >
-          {email && (
+          {dataUser.email ? (
             <Avatar>
-              <AvatarImage src="https://drive.google.com/file/d/1em-PVgw9RWYunZvZHdNrBUnRLu6Hl3lY/view?usp=sharing" />
-              <AvatarFallback>{email.charAt(0).toUpperCase()}</AvatarFallback>
+              <AvatarImage
+                src={
+                  dataUser.photo ??
+                  `https://drive.google.com/file/d/1em-PVgw9RWYunZvZHdNrBUnRLu6Hl3lY/view?usp=sharing`
+                }
+              />
+              <AvatarFallback>{dataUser.email.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
+          ) : (
+            <Button className="px-6 py-2 text-xs md:px-10 md:py-6">Logout</Button>
           )}
         </Link>
       </div>

@@ -1,23 +1,30 @@
-'use client';
+"use client";
 
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useLogin } from '@/hooks/auth/useLogin';
-import { useRouter } from 'next/navigation';
-import { FaGoogle } from 'react-icons/fa';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { useRouter } from "next/navigation";
+import { FaGoogle } from "react-icons/fa";
 
 const formSchema = z.object({
   email: z.string().refine((value) => !!value.trim(), {
-    message: 'Email is required',
+    message: "Email is required"
   }),
   password: z.string().refine((value) => !!value.trim(), {
-    message: 'Password is required',
-  }),
+    message: "Password is required"
+  })
 });
 
 export default function LoginForm() {
@@ -26,9 +33,9 @@ export default function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
-    },
+      email: "",
+      password: ""
+    }
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -97,7 +104,9 @@ export default function LoginForm() {
             className=" w-full"
             variant="secondary"
             type="button"
-            //   onClick={() => onGoogleLogin()}
+            onClick={() =>
+              (window.location.href = "https://api-stg.soccerchief.co/auth/google?role=Admin")
+            }
           >
             <FaGoogle className="mr-2" /> Google
           </Button>

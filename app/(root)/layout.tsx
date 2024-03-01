@@ -1,16 +1,26 @@
-'use client';
+"use client";
 
-import Header from '@/components/shared/header';
-import Sidebar from '@/components/shared/sidebar/sidebar';
-import { redirect, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import Header from "@/components/shared/header";
+import Sidebar from "@/components/shared/sidebar/sidebar";
+import { Loader } from "@/components/ui/loader";
+import { useLoginGoogle } from "@/hooks/auth/useLoginGoogle";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const searchParams = useSearchParams();
+  const loginId = searchParams.get("LoginId");
+  const { data } = useLoginGoogle(loginId);
+
+  if (data) {
+    window.location.href = "/";
+  }
+
   const pathname = usePathname();
-  const protectedRoutes = ['/', '/dashboard'];
+  const protectedRoutes = ["/", "/dashboard"];
   let isAuthenticated: boolean;
 
-  if (typeof localStorage !== 'undefined') {
+  if (typeof localStorage !== "undefined") {
     // isAuthenticated = !!localStorage.getItem('token');
     isAuthenticated = true;
   } else {
@@ -29,7 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <Sidebar />
       <div className={`duration-300 flex-1 flex-col space-y-5 md:ml-[280px]`}>
         <Header />
-        <main className="flex-1 md:mx-5 pb-10">{children}</main>
+        {loginId ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <Loader />
+          </div>
+        ) : (
+          <main className="flex-1 md:mx-5 pb-10">{children}</main>
+        )}
       </div>
     </div>
   );

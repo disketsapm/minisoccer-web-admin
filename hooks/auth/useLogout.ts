@@ -1,18 +1,17 @@
-import { LoginRequestBody } from "@/interfaces/auth.interface";
 import { AuthService } from "@/services/auth.service";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export function useLogin() {
+export function useLogout() {
   const authService = new AuthService();
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: LoginRequestBody) => authService.login(data),
+    mutationFn: (token: object) => authService.logout(token),
     onSuccess: () => {
-      router.push("/");
-      toast.success("Login Success");
+      toast.success("Logout success ");
+      router.replace("/login");
     },
     onError: (error: any) => {
       toast.error(error.message);
