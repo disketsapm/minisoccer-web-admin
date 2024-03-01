@@ -68,7 +68,7 @@ export const BannerForm = ({ data }: any) => {
     ? "Edit Banner ini untuk diupdate dan ditampilkan"
     : "Buat Banner baru untuk ditampilkan ";
   const toastMessage = data ? "Banner updated." : "Banner created.";
-  const action = data ? "Save changes" : "Buat Akun";
+  const action = data ? "Simpan Perubahan" : "Buat Banner";
 
   const form = useForm<BannerFormValues>({
     resolver: zodResolver(formSchema)
