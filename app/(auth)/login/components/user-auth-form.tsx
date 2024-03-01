@@ -15,8 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/auth/useLogin";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().refine((value) => !!value.trim(), {
@@ -28,6 +30,17 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
+  const params = useSearchParams();
+  const error = params.get("error");
+
+  console.log("error", error);
+
+  useEffect(() => {
+    if (error === "unauthorized") {
+      toast.error("Akun bukan admin");
+    }
+  });
+
   const { mutate: login, isPending } = useLogin();
 
   const form = useForm<z.infer<typeof formSchema>>({

@@ -50,7 +50,7 @@ export class RequestAdapter {
 
   private handleError(error: AxiosError): void {
     if (error.response?.status === 401 || error.response?.status === 403) {
-      window.location.href = "/login";
+      window.location.href = "/login?error=unauthorized";
     }
 
     if (error.response?.status === 400) {
