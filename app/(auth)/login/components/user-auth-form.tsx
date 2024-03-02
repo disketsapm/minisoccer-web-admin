@@ -1,43 +1,34 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/auth/useLogin";
-import { useRouter, useSearchParams } from "next/navigation";
-import { FaGoogle } from "react-icons/fa";
-import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useLogin } from '@/hooks/auth/useLogin';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { FaGoogle } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 const formSchema = z.object({
   email: z.string().refine((value) => !!value.trim(), {
-    message: "Email is required"
+    message: 'Email is required',
   }),
   password: z.string().refine((value) => !!value.trim(), {
-    message: "Password is required"
-  })
+    message: 'Password is required',
+  }),
 });
 
 export default function LoginForm() {
   const params = useSearchParams();
-  const error = params.get("error");
-
-  console.log("error", error);
+  const error = params.get('error');
 
   useEffect(() => {
-    if (error === "unauthorized") {
-      toast.error("Akun bukan admin");
+    if (error === 'unauthorized') {
+      toast.error('Akun bukan admin');
     }
   });
 
@@ -46,9 +37,9 @@ export default function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: ""
-    }
+      email: '',
+      password: '',
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -117,9 +108,7 @@ export default function LoginForm() {
             className=" w-full"
             variant="secondary"
             type="button"
-            onClick={() =>
-              (window.location.href = "https://api-stg.soccerchief.co/auth/google?role=Admin")
-            }
+            onClick={() => (window.location.href = 'https://api-stg.soccerchief.co/auth/google?role=Admin')}
           >
             <FaGoogle className="mr-2" /> Google
           </Button>
