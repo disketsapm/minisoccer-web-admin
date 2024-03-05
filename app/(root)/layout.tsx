@@ -16,23 +16,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     window.location.href = "/";
   }
 
-  const pathname = usePathname();
-  const protectedRoutes = ["/", "/dashboard"];
   let isAuthenticated: boolean;
 
   if (typeof localStorage !== "undefined") {
-    // isAuthenticated = !!localStorage.getItem('token');
-    isAuthenticated = true;
+    isAuthenticated = !!localStorage.getItem("token");
   } else {
-    // isAuthenticated = false;
     isAuthenticated = false;
   }
 
-  // useEffect(() => {
-  //   if (!isAuthenticated && protectedRoutes.includes(pathname)) {
-  //     redirect('/login');
-  //   }
-  // }, [isAuthenticated]);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      redirect("/login");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

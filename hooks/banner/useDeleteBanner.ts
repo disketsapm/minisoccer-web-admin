@@ -1,14 +1,14 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BannerService } from '@/services/banner/banner.service';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FieldService } from "@/services/field/field.service";
 
-export function useDeletebanner() {
-  const bannerService = new BannerService();
+export function useDeleteField() {
+  const fieldService = new FieldService();
   const queryClient = useQueryClient();
 
   return useMutation<string, string, any>({
-    mutationFn: (payload) => bannerService.deleteBanner(payload),
+    mutationFn: (payload) => fieldService.deleteField(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['listBanner'] });
-    },
+      queryClient.invalidateQueries({ queryKey: ["listField"] });
+    }
   });
 }
