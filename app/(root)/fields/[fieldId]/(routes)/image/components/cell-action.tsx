@@ -17,6 +17,7 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const params = useParams();
   const router = useRouter();
   const { mutateAsync: deleteBanner } = useDeleteBanner();
   const { mutateAsync: deleteFile } = useDeleteFile();
@@ -39,7 +40,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <Button
           variant={'outlinePrimary'}
           size={'sm'}
-          onClick={() => router.push(`/banners/${data?._id}`)}
+          onClick={() => router.push(`/banners/${params.bannerId}/image/${data._id}`)}
         >
           <Edit className=" h-4 w-4" />
         </Button>
