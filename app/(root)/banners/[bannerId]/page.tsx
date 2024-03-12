@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { BannerForm } from './components/banner-form';
-import { useGetBanners } from '@/hooks/banner/useGetBanners';
+import { BannerForm } from "./components/banner-form";
+import { useGetBanners } from "@/hooks/banner/useGetBanners";
 
-const BannerPage = ({ params }: { params: { bannerId: string } }) => {
+const BannerIdPage = ({ params }: { params: { bannerId: string } }) => {
   const { data, isPending } = useGetBanners({ _id: params.bannerId });
 
   return (
@@ -15,4 +15,4 @@ const BannerPage = ({ params }: { params: { bannerId: string } }) => {
   );
 };
 
-export default BannerPage;
+export default BannerIdPage;

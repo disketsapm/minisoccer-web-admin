@@ -1,30 +1,31 @@
-'use client';
+"use client";
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from "@tanstack/react-table";
 
-import { CellAction } from './cell-action';
-import { Banner } from '@/interfaces/banner.interface';
-import Image from 'next/image';
+import { CellAction } from "./cell-action";
+import { ImageField } from "@/interfaces/image-field.interface";
+import Image from "next/image";
 
-export type BannerColumn = Banner;
+export type ImageFieldColumn = ImageField;
 
-export const columns: ColumnDef<BannerColumn>[] = [
+export const columns: ColumnDef<ImageFieldColumn>[] = [
   {
-    accessorKey: 'image_desktop',
-    header: 'Banner Desktop',
+    accessorKey: "assets",
+    header: "Gambar Lapang",
     cell: ({ row }) => (
       <Image
-        src={row.original.image_desktop}
-        alt="banner"
+        // @ts-ignore
+        src={row.original.url}
+        alt="imageField"
         width={400}
         height={400}
         objectFit="cover"
       />
-    ),
+    )
   },
 
   {
-    id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />,
-  },
+    id: "actions",
+    cell: ({ row }) => <CellAction data={row.original} />
+  }
 ];

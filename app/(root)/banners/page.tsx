@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { BannerClient } from './components/client';
+import { BannerClient } from "./components/client";
 
 const BannerPage = () => {
   return (

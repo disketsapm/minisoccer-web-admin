@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ColumnDef,
@@ -9,18 +9,32 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   VisibilityState,
-  ColumnFiltersState,
-} from '@tanstack/react-table';
-import { useDebouncedCallback } from 'use-debounce';
+  ColumnFiltersState
+} from "@tanstack/react-table";
+import { useDebouncedCallback } from "use-debounce";
 
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ArrowUpDown, ChevronDown } from 'lucide-react';
-import { PaginationTable } from '../shared/pagination-table';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { PaginationTable } from "../shared/pagination-table";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,10 +64,10 @@ export function DataTable<TData, TValue>({
   filter,
   pageCount,
   pagination,
-  sorting,
+  sorting
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const debounced = useDebouncedCallback(
     // function
     (value) => {
@@ -79,9 +93,9 @@ export function DataTable<TData, TValue>({
     state: {
       pagination,
       sorting,
-      columnVisibility,
+      columnVisibility
     },
-    pageCount,
+    pageCount
   });
 
   return (
@@ -172,12 +186,20 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      {...(header.column.getCanSort() ? { onClick: header.column.getToggleSortingHandler() } : {})}
+                      {...(header.column.getCanSort()
+                        ? { onClick: header.column.getToggleSortingHandler() }
+                        : {})}
                       className="cursor-pointer"
                     >
                       <div className="flex gap-2 items-center">
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getIsSorted() === 'asc' ? <FaChevronUp /> : header.column.getIsSorted() === 'desc' ? <FaChevronDown /> : null}
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.column.getIsSorted() === "asc" ? (
+                          <FaChevronUp />
+                        ) : header.column.getIsSorted() === "desc" ? (
+                          <FaChevronDown />
+                        ) : null}
                       </div>
                     </TableHead>
                   );
@@ -190,11 +212,13 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   <TableCell>{pagination.pageIndex * pagination.pageSize + rowIndex + 1}</TableCell>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
@@ -204,7 +228,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {isLoading ? 'Fetching Data...' : 'No results.'}
+                  {isLoading ? "Fetching Data..." : "No results."}
                 </TableCell>
               </TableRow>
             )}

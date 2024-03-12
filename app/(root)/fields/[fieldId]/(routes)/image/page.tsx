@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { BannerClient } from './components/client';
+import { ImageFieldClient } from "./components/client";
 
-const BannerPage = () => {
+const ImageFieldPage = () => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BannerClient />
+        <ImageFieldClient />
       </div>
     </div>
   );
 };
 
-export default BannerPage;
+export default ImageFieldPage;
