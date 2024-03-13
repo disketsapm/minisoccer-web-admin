@@ -23,30 +23,20 @@ import { useAddField } from "@/hooks/field/useAddField";
 import { useUpdateField } from "@/hooks/field/useUpdateField";
 import { FaBackspace } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
+import { parse } from "path";
 
 const formSchema = z.object({
   yardName: z.string().min(1, { message: "Title is required" }),
-  yardDesc: z.string().min(1, { message: "Description is required" }),
   yardCapacity: z.string().min(1, { message: "Capacity is required" }),
   yardSize: z.string().min(1, { message: "Size is required" }),
-  yardFacilities: z.array(z.string()).min(1, { message: "Facilities is required" }),
-  yardLocationUrl: z.string().min(1, { message: "Location is required" }),
-  assets: z
-    .array(
-      z.object({
-        image: z.string().min(1, { message: "Image is required" }),
-        heroImage: z.string().min(1, { message: "Hero Image is required" }),
-        showcase: z.string().min(1, { message: "Showcase is required" })
-      })
-    )
-    .optional()
+  yardFacilities: z.array(z.number()).min(1, { message: "Facilities is required" }),
+  yardLocationUrl: z.string().min(1, { message: "Location is required" })
 });
 
 type FieldFormValues = z.infer<typeof formSchema>;
 
 export const FieldForm = ({ data }: any) => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const title = data ? "Edit Lapang" : "Buat Lapang";
@@ -62,31 +52,41 @@ export const FieldForm = ({ data }: any) => {
 
   const { mutateAsync: createField, isPending: loadingCreate } = useAddField();
   const { mutateAsync: updateField, isPending: loadingUpdate } = useUpdateField();
+  console.log(form.watch());
+
+  const items = [
+    { iconId: 1, name: "Mini Soccer Court" },
+    { iconId: 2, name: "Toilet" },
+    { iconId: 3, name: "Musala" },
+    { iconId: 4, name: "Shower Room" }
+  ];
 
   const onSubmit = async (dataForm: FieldFormValues) => {
+    console.log(dataForm);
+    const transformData = {
+      ...dataForm,
+      yardFacilities: dataForm.yardFacilities.map((facility) => {
+        return items.find((item) => item.iconId === facility);
+      })
+    };
+    console.log(transformData);
     if (data) {
-      await updateField({ _id: data._id, ...dataForm });
+      await updateField({ _id: data._id, ...transformData });
     } else {
-      await createField(dataForm);
+      await createField(transformData);
     }
   };
 
   useEffect(() => {
     form.setValue("yardName", data?.yardName || "");
-    form.setValue("yardDesc", data?.yardDesc || "");
     form.setValue("yardCapacity", data?.yardCapacity.toString() || "");
-    form.setValue("yardSize", data?.yardSize.toString() || "");
-    form.setValue("yardFacilities", data?.yardFacilities || []);
+    form.setValue("yardSize", data?.yardSize || "");
+    form.setValue(
+      "yardFacilities",
+      data?.yardFacilities?.map((facility: any) => parseInt(facility.iconId))
+    );
     form.setValue("yardLocationUrl", data?.yardLocationUrl || "");
-    form.setValue("assets", data?.assets || []);
   }, [data]);
-
-  const items = [
-    { label: "Mini Soccer Court" },
-    { label: "Toilet" },
-    { label: "Musala" },
-    { label: "Shower Room" }
-  ];
 
   console.log(form.watch());
 
@@ -130,23 +130,7 @@ export const FieldForm = ({ data }: any) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="yardDesc"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deskripsi Lapang</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Masukan Judul Field"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="yardCapacity"
@@ -176,7 +160,6 @@ export const FieldForm = ({ data }: any) => {
                       disabled={loading}
                       placeholder="Masukan Judul Field"
                       {...field}
-                      type="number"
                     />
                   </FormControl>
                   <FormMessage />
@@ -210,33 +193,24 @@ export const FieldForm = ({ data }: any) => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     {items.map((item) => (
-                      <FormField
-                        key={item.label}
-                        control={form.control}
-                        name="yardFacilities"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={item.label}
-                              className="flex flex-row items-start space-x-3 space-y-0"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={form.watch().yardFacilities?.includes(item.label)}
-                                  onCheckedChange={(checked) => {
-                                    const currentFacilities = form.getValues().yardFacilities || [];
-                                    const updatedFacilities = checked
-                                      ? [...currentFacilities, item.label]
-                                      : currentFacilities.filter((value) => value !== item.label);
-                                    form.setValue("yardFacilities", updatedFacilities);
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">{item.label}</FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
+                      <FormItem
+                        key={item.iconId} // Change key to iconId
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={form.watch().yardFacilities?.includes(item.iconId)} // Check for item.iconId
+                            onCheckedChange={(checked) => {
+                              const currentFacilities = form.getValues().yardFacilities || [];
+                              const updatedFacilities = checked
+                                ? [...currentFacilities, item.iconId] // Update with item.iconId
+                                : currentFacilities.filter((value) => value !== item.iconId); // Update with item.iconId
+                              form.setValue("yardFacilities", updatedFacilities);
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">{item.name}</FormLabel>
+                      </FormItem>
                     ))}
                   </div>
                   <FormMessage />

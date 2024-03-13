@@ -6,6 +6,7 @@ import { useGetImageFields } from "@/hooks/image-field/useGetImageFields";
 const ImageFieldPage = ({ params }: { params: { fieldId: string; imageId: string } }) => {
   const { data, isPending } = useGetImageFields({ _id: params.fieldId, assetId: params.imageId });
   console.log(params);
+  console.log(data);
 
   return (
     <div className="flex-col">

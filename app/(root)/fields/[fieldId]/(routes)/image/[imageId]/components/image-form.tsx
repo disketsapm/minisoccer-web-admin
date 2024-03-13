@@ -47,6 +47,7 @@ type BannerFormValues = z.infer<typeof formSchema>;
 
 export const ImageForm = ({ data }: any) => {
   const params = useParams();
+  console.log(params);
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,7 +57,6 @@ export const ImageForm = ({ data }: any) => {
     mobile: null
   });
 
-  console.log(data?.assets[0]?.url);
   const title = data ? "Edit Gambar" : "Buat Gambar";
   const description = data
     ? "Edit Gambar ini untuk diupdate dan ditampilkan"
@@ -85,26 +85,31 @@ export const ImageForm = ({ data }: any) => {
         });
         uploadedImageUrlDesktop = uploadedImageDesktop.data.file_url;
       }
-      console.log(data?.assets[0]?.url);
+      console.log(params.fieldId);
       const imageField = {
         _id: params.fieldId,
         assetId: data?._id,
         url: dataForm.imageDesktop
           ? uploadedImageUrlDesktop
           : data
-          ? data?.assets[0]?.url
+          ? data?.url
           : imageDesktop?.data?.file_url
       };
+      console.log(imageField);
       if (data) {
-        if (data?.assets[0]?.url !== imageField.url) {
-          const parts = data?.assets[0]?.url.split("/");
+        if (data?.url !== imageField.url) {
+          const parts = data?.url.split("/");
           const filename = parts[parts.length - 1];
           await deleteFile({ filename: filename });
         }
-
-        await updateImageField({ ...imageField, _id: data._id });
+        console.log(imageField);
+        await updateImageField(imageField);
       } else {
-        await createImageField(imageField);
+        const payload = {
+          _id: params.fieldId,
+          assets: [{ url: imageField.url }]
+        };
+        await createImageField(payload);
       }
       toast.success(toastMessage);
       router.refresh();
@@ -115,14 +120,13 @@ export const ImageForm = ({ data }: any) => {
   };
 
   console.log(form.watch());
-  console.log(form.formState.errors);
 
   useEffect(() => {
-    form.setValue("image_desktop", data?.assets[0]?.url);
+    form.setValue("image_desktop", data?.url);
   }, [data]);
 
   useEffect(() => {
-    form.setValue("image_desktop", cropImage?.desktop || data?.assets[0]?.url || "");
+    form.setValue("image_desktop", cropImage?.desktop || data?.url || "");
   }, [cropImage]);
 
   const imageUrlDekstop = imageDesktop ? URL.createObjectURL(imageDesktop) : null;
@@ -165,7 +169,7 @@ export const ImageForm = ({ data }: any) => {
                   ? cropImage.desktop
                   : imageDesktop
                   ? URL.createObjectURL(imageDesktop)
-                  : data?.assets[0]?.url;
+                  : data?.url;
 
                 return (
                   <FormItem>
@@ -186,9 +190,7 @@ export const ImageForm = ({ data }: any) => {
                         name={field.name}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Upload banner dengan ratio 1920x1080 atau ratio 16:9
-                    </FormDescription>
+                    <FormDescription>Upload gambar lapang dengan ratio 16:9</FormDescription>
                     <FormMessage />
                     <Image
                       src={src ?? "https://www.eclosio.ong/wp-content/uploads/2018/08/default.png"} // Create a temporary URL for the Blob

@@ -46,6 +46,7 @@ interface DataTableProps<TData, TValue> {
   onSortingChange: any;
   sorting: any;
   filter: (value: string) => void;
+  isImageField?: boolean;
 }
 
 type ColumnSort = {
@@ -64,7 +65,8 @@ export function DataTable<TData, TValue>({
   filter,
   pageCount,
   pagination,
-  sorting
+  sorting,
+  isImageField
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [text, setText] = useState("");
@@ -101,78 +103,49 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex justify-between items-center gap-5 py-3">
-        <div className="flex justify-center items-baseline gap-x-2">
-          <p className="text-sm">Show</p>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="ml-auto"
-              >
-                {table.options.state.pagination?.pageSize}
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="min-w-[2rem]"
-              align="start"
-            >
-              {[10, 20, 30].map((size) => (
-                <DropdownMenuCheckboxItem
-                  key={size}
-                  className="capitalize"
-                  checked={table.options.state.pagination?.pageSize === size}
-                  onCheckedChange={() => {
-                    table.setPageSize(size);
-                  }}
+        {!isImageField && (
+          <div className="flex justify-center items-baseline gap-x-2">
+            <p className="text-sm">Show</p>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="ml-auto"
                 >
-                  {size}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <p className="text-sm">Data</p>
-        </div>
-        <div className="flex gap-5">
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="ml-auto"
+                  {table.options.state.pagination?.pageSize}
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="min-w-[2rem]"
+                align="start"
               >
-                Kolom <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide() && column.id !== 'actions')
-                .map((column) => {
-                  const columnName = column.id
-                    .replace(/_/g, ' ')
-                    .toLowerCase()
-                    .replace(/(?:^|\s)\S/g, function (a) {
-                      return a.toUpperCase();
-                    });
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
-                      {columnName}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-          <Input
-            placeholder={`Cari...`}
-            onChange={(e: any) => debounced(e.target.value)}
-            className="max-w-sm"
-          />
-        </div>
+                {[10, 20, 30].map((size) => (
+                  <DropdownMenuCheckboxItem
+                    key={size}
+                    className="capitalize"
+                    checked={table.options.state.pagination?.pageSize === size}
+                    onCheckedChange={() => {
+                      table.setPageSize(size);
+                    }}
+                  >
+                    {size}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <p className="text-sm">Data</p>
+          </div>
+        )}
+        {!isImageField && (
+          <div className="flex gap-5">
+            <Input
+              placeholder={`Cari...`}
+              onChange={(e: any) => debounced(e.target.value)}
+              className="max-w-sm"
+            />
+          </div>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>
@@ -235,10 +208,11 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-
-      <div className="flex items-center justify-end py-4">
-        <PaginationTable tableLib={table} />
-      </div>
+      {!isImageField && (
+        <div className="flex items-center justify-end py-4">
+          <PaginationTable tableLib={table} />
+        </div>
+      )}
     </div>
   );
 }

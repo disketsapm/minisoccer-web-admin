@@ -11,7 +11,8 @@ export class ImageFieldService extends RequestAdapter {
     console.log("params", params);
     try {
       const response = await this.sendGetRequest<BaseResponse<Array<ImageField>>>(
-        `/admin/field/image?_id=${params._id}`
+        `/admin/field/image`,
+        params
       );
 
       return response.data;
@@ -33,9 +34,9 @@ export class ImageFieldService extends RequestAdapter {
     }
   }
 
-  public async updateImage(payload: ImageField) {
+  public async updateImage(payload: any) {
     try {
-      const response = await this.sendPutRequest<ImageField, string>(`/admin/field/image`, payload);
+      const response = await this.sendPutRequest<any, string>(`/admin/field/image`, payload);
       return response.data;
     } catch (error) {
       throw error;

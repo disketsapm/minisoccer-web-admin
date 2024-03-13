@@ -17,8 +17,8 @@ export const columns: ColumnDef<ImageFieldColumn>[] = [
         // @ts-ignore
         src={row.original.url}
         alt="imageField"
-        width={400}
-        height={400}
+        width={200}
+        height={200}
         objectFit="cover"
       />
     )
@@ -26,6 +26,13 @@ export const columns: ColumnDef<ImageFieldColumn>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />
+    header: "Aksi",
+    cell: ({ row }) => {
+      return (
+        <div className="flex">
+          <CellAction data={row.original} />
+        </div>
+      );
+    }
   }
 ];

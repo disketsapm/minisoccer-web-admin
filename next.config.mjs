@@ -2,7 +2,16 @@
 const nextConfig = {
   output: "standalone",
   images: {
-    domains: ["rafi-demo-bucket.s3.amazonaws.com", "www.eclosio.ong"]
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**"
+      },
+      {
+        protocol: "http",
+        hostname: "**"
+      }
+    ]
   },
   reactStrictMode: false
 };

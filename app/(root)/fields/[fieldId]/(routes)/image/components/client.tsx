@@ -13,11 +13,11 @@ import { usePagination } from "@/hooks/general/usePagination";
 import { useGetImageFields } from "@/hooks/image-field/useGetImageFields";
 import { useEffect, useState } from "react";
 import { useSorting } from "@/hooks/general/useSorting";
+import { FaBackspace } from "react-icons/fa";
 
 export const ImageFieldClient = () => {
   const router = useRouter();
   const pathname = useParams();
-  console.log(pathname);
   const { limit, onPaginationChange, skip, pagination } = usePagination();
   const { sorting, onSortingChange, field, order } = useSorting();
   const [params, setParams] = useState({
@@ -25,7 +25,6 @@ export const ImageFieldClient = () => {
   });
 
   const { data: dataImageField, isPending } = useGetImageFields(params);
-  console.log(dataImageField);
 
   const pageCount = dataImageField?.meta?.totalPage || 0;
 
@@ -34,14 +33,24 @@ export const ImageFieldClient = () => {
     setParams({});
   };
 
-  console.log(dataImageField?.data);
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading
-          title={`Gambar Lapang `}
-          description="Kelola Gambar Lapang "
-        />
+        <div className="flex items-center justify-start gap-2">
+          <Button
+            size={"default"}
+            variant={"outline"}
+            onClick={() => router.push("/fields")}
+          >
+            <FaBackspace className="mr-2" />
+            Kembali
+          </Button>
+          <Heading
+            title={`Gambar  `}
+            description="Kelola Gambar Lapang "
+          />
+        </div>
+
         <Button
           variant={"outlineDanger"}
           className="bg-red-500 text-white border-2 border-black hover:bg-red-500 hover:text-white"
@@ -62,6 +71,7 @@ export const ImageFieldClient = () => {
         filter={handleFilter}
         sorting={sorting}
         onSortingChange={onSortingChange}
+        isImageField
       />
 
       <Separator />
