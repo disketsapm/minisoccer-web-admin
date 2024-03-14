@@ -9,7 +9,7 @@ export function useUpdateField() {
   const queryClient = useQueryClient();
   const route = useRouter();
 
-  return useMutation<string, string, Field>({
+  return useMutation<string, string, any>({
     mutationFn: (payload) => fieldService.updateField(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["listField"] });
