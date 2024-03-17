@@ -1,3 +1,4 @@
+export interface ImageField {
   _id?: string;
   image_desktop?: string;
   url?: string | undefined;
