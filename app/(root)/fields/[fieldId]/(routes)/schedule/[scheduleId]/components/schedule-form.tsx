@@ -62,10 +62,8 @@ export const ScheduleForm = ({ data }: any) => {
     isPending: loadingGenerate,
     data: dataBoard
   } = useAddScheduleBoard();
-
-  const { data: dataSchedule, refetch: refetchGetSchedule } = useGetSchedule({
-    search: params.fieldId
-  });
+  console.log(dataBoard);
+  const { data: dataSchedule, refetch: refetchGetSchedule } = useGetSchedule("kadal");
   console.log(dataSchedule);
   const router = useRouter();
 
@@ -111,7 +109,6 @@ export const ScheduleForm = ({ data }: any) => {
       venue_id: params.fieldId,
       ...dataForm
     });
-    refetchGetSchedule();
   };
 
   return (
