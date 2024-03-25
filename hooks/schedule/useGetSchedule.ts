@@ -5,13 +5,12 @@ import { ScheduleBoardResponse } from "@/interfaces/schedule.interface";
 import { ScheduleService } from "@/services/schedule/schedule.service";
 
 export function useGetSchedule(params?: any) {
-  console.log(!!params);
   const scheduleService = new ScheduleService();
   return useQuery<BaseResponse<Array<ScheduleBoardResponse>>, Error>({
     queryKey: ["listSchedule", params],
     queryFn: () => {
       return scheduleService.getSchedule(params);
     },
-    enabled: !!params
+    enabled: !!params.search
   });
 }

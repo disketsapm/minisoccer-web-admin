@@ -35,6 +35,7 @@ import { useUpdateImageField } from "@/hooks/image-field/useUpdateImageField";
 import { useAddScheduleBoard } from "@/hooks/schedule/useAddScheduleBoard";
 import Calendar from "@/app/(root)/fields/[fieldId]/(routes)/schedule/[scheduleId]/components/calendar";
 import { useGetSchedule } from "@/hooks/schedule/useGetSchedule";
+import { useUpdateScheduleBoardStatus } from "@/hooks/schedule/useUpdateScheduleBoardStatus";
 
 const formSchema = z.object({
   start_date: z.string().min(1, { message: "Start date is required" }),
@@ -62,8 +63,15 @@ export const ScheduleForm = ({ data }: any) => {
     isPending: loadingGenerate,
     data: dataBoard
   } = useAddScheduleBoard();
-  console.log(dataBoard);
-  const { data: dataSchedule, refetch: refetchGetSchedule } = useGetSchedule("kadal");
+  console.log(dataBoard?.data?.scheduleBoardId);
+
+  const { mutateAsync: updateScheduleBoard } = useUpdateScheduleBoardStatus();
+
+  const scheduleBoardId = dataBoard?.data?.scheduleBoardId;
+  const { data: dataSchedule, refetch: refetchGetSchedule } = useGetSchedule({
+    search: dataBoard?.data?.scheduleBoardId ?? null
+  });
+
   console.log(dataSchedule);
   const router = useRouter();
 
@@ -106,7 +114,7 @@ export const ScheduleForm = ({ data }: any) => {
   console.log(form.watch());
   const onSubmit = async (dataForm: BannerFormValues) => {
     await generateSchedule({
-      venue_id: params.fieldId,
+      field_id: params.fieldId,
       ...dataForm
     });
   };
@@ -230,6 +238,19 @@ export const ScheduleForm = ({ data }: any) => {
       <Separator />
       <div className="mt-10 w-[1000px]">
         <Calendar events={dataSchedule?.data ?? []} />
+        <Button
+          className="float-right mt-5"
+          size={"lg"}
+          type="submit"
+          onClick={async () => {
+            updateScheduleBoard({
+              _id: dataBoard?.data?.scheduleBoardId,
+              status: "Validated"
+            });
+          }}
+        >
+          Validate Schedule
+        </Button>
       </div>
     </>
   );

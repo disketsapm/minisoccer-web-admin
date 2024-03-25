@@ -11,9 +11,8 @@ export class ScheduleService extends RequestAdapter {
     try {
       const response = await this.sendGetRequest<BaseResponse<Array<ScheduleBoardResponse>>>(
         `/admin/schedule/board`,
-        params
+        params.params
       );
-
       return response.data;
     } catch (error) {
       throw error;
@@ -55,6 +54,20 @@ export class ScheduleService extends RequestAdapter {
         ScheduleBoardResponse,
         BaseResponse<ScheduleBoardResponse>
       >(`/admin/schedule`, payload);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async updateScheduleBoardStatus(
+    payload: ScheduleBoardResponse
+  ): Promise<BaseResponse<ScheduleBoardResponse>> {
+    try {
+      const response = await this.sendPutRequest<
+        ScheduleBoardResponse,
+        BaseResponse<ScheduleBoardResponse>
+      >(`/admin/schedule/status`, payload);
       return response.data;
     } catch (error) {
       throw error;

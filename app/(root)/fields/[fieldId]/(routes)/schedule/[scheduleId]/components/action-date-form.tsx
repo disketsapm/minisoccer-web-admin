@@ -43,7 +43,7 @@ import {
 import { useUpdateSchedule } from "@/hooks/schedule/useUpdateSchedule";
 
 const formSchema = z.object({
-  price: z.number().min(1, { message: "Price is required" }),
+  price: z.string().min(1, { message: "Price is required" }),
   status: z.string().min(1, { message: "Status is required" })
 });
 
@@ -52,7 +52,6 @@ type BannerFormValues = z.infer<typeof formSchema>;
 export const ActionDateForm = ({ data }: any) => {
   const { mutateAsync: updateSchedule } = useUpdateSchedule();
   const params = useParams();
-  console.log(params);
 
   const form = useForm<BannerFormValues>({
     resolver: zodResolver(formSchema)

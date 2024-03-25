@@ -25,7 +25,8 @@ export const ScheduleClient = () => {
     limit,
     columnName: field,
     filterType: order,
-    search: ""
+    search: "",
+    field_id: pathname.fieldId
   });
   const { data: dataSchedule, isPending } = useGetScheduleBoard({
     params
@@ -39,13 +40,15 @@ export const ScheduleClient = () => {
     setParams({ ...params, search: value });
   };
 
+  console.log(params);
   useEffect(() => {
     setParams({
       page: Math.floor(skip / limit) + 1,
       limit: limit,
       columnName: field ?? undefined,
       filterType: order ?? undefined,
-      search: params.search
+      search: params.search,
+      field_id: pathname.fieldId
     });
   }, [skip, limit, field, order, params.search]);
 
