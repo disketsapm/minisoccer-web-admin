@@ -15,6 +15,7 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  console.log(data);
   const router = useRouter();
   const { mutateAsync: deleteField } = useDeleteField();
   const onConfirm = async () => {
@@ -30,14 +31,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <Button
           variant={"outlinePrimary"}
           size={"sm"}
-          onClick={() => router.push(`/fields/${data?._id}/schedule`)}
+          onClick={() => router.push(`/fields/${data?._id}/schedule?fieldName=${data?.yardName}`)}
         >
           <CalendarCheck2 className=" h-4 w-4" />
         </Button>
         <Button
           variant={"outlinePrimary"}
           size={"sm"}
-          onClick={() => router.push(`/fields/${data?._id}/image`)}
+          onClick={() => router.push(`/fields/${data?._id}/image?fieldName=${data?.yardName}`)}
         >
           <ImagePlus className=" h-4 w-4" />
         </Button>

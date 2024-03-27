@@ -57,6 +57,7 @@ const formSchema = z.object({
 type BannerFormValues = z.infer<typeof formSchema>;
 
 export const ScheduleForm = ({ data }: any) => {
+  console.log(data);
   const params = useParams();
   const {
     mutateAsync: generateSchedule,
@@ -69,7 +70,7 @@ export const ScheduleForm = ({ data }: any) => {
 
   const scheduleBoardId = dataBoard?.data?.scheduleBoardId;
   const { data: dataSchedule, refetch: refetchGetSchedule } = useGetSchedule({
-    search: dataBoard?.data?.scheduleBoardId ?? null
+    search: data ? data.scheduleId : scheduleBoardId ?? null
   });
 
   console.log(dataSchedule);
@@ -153,6 +154,7 @@ export const ScheduleForm = ({ data }: any) => {
                       placeholder="Masukan Tanggal Mulai"
                       {...field}
                       type="date"
+                      isDisabled={scheduleBoardId || data}
                     />
                   </FormControl>
                   <FormMessage />
@@ -170,13 +172,14 @@ export const ScheduleForm = ({ data }: any) => {
                       placeholder="Masukan Tanggal Selesai"
                       {...field}
                       type="date"
+                      isDisabled={scheduleBoardId || data}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 border p-2 rounded-sm">
               <FormLabel>Harga Hari Biasa</FormLabel>
               {weekDayFields.map((field, index) => (
                 <div key={field.id}>
@@ -191,6 +194,7 @@ export const ScheduleForm = ({ data }: any) => {
                             placeholder="Masukan Harga"
                             {...field}
                             type="number"
+                            isDisabled={scheduleBoardId || data}
                           />
                         </FormControl>
                         <FormMessage />
@@ -201,7 +205,7 @@ export const ScheduleForm = ({ data }: any) => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 border p-2 rounded-sm">
               <FormLabel>Harga Hari Libur / Akhir Pekan </FormLabel>
               {weekEndFields.map((field, index) => (
                 <div key={field.id}>
@@ -216,6 +220,7 @@ export const ScheduleForm = ({ data }: any) => {
                             placeholder="Masukan Harga"
                             {...field}
                             type="number"
+                            isDisabled={scheduleBoardId || data}
                           />
                         </FormControl>
                         <FormMessage />
@@ -229,6 +234,7 @@ export const ScheduleForm = ({ data }: any) => {
               className="float-right"
               size={"lg"}
               type="submit"
+              disabled={scheduleBoardId || data}
             >
               Generate
             </Button>

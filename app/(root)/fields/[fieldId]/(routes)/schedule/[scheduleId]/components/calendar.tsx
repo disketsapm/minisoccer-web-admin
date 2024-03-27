@@ -19,11 +19,13 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ events }) => {
+  console.log(events);
   const eventList = events.map((event, index) => ({
     start: event.timeStart,
     title: event.status,
     end: event.timeEnd,
     idSession: event._id,
+    sessionName: event.session,
     price: event.price,
     dateSelected: new Date(event.date).toDateString(), // Get the date of the session
     index: index + 1 // Get the index of the session (1-based)
@@ -48,15 +50,17 @@ const Calendar: React.FC<CalendarProps> = ({ events }) => {
           <Dialog>
             <DialogTrigger className="w-full border bordsr-gray rounded">
               <div>
-                <p>Session #{arg.event.extendedProps.index}</p>
+                <p>{arg.event.extendedProps.sessionName}</p>
                 <p>
-                  Time: {formattedTime(arg.event.startStr)} - {formattedTime(arg.event.endStr)}
+                  {formattedTime(arg.event.startStr)} - {formattedTime(arg.event.endStr)}
                 </p>
               </div>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{arg.event.extendedProps.dateSelected}</DialogTitle>
+                <DialogTitle>
+                  {arg.event.extendedProps.dateSelected} - {arg.event.extendedProps.sessionName}{" "}
+                </DialogTitle>
                 <ActionDateForm data={arg.event} />
               </DialogHeader>
             </DialogContent>

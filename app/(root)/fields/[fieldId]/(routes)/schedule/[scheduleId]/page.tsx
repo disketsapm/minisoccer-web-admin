@@ -11,7 +11,7 @@ const ImageFieldPage = ({ params }: { params: { fieldId: string; imageId: string
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ScheduleForm data={params.imageId !== "new" ? (data?.data as object) ?? null : null} />
+        <ScheduleForm data={params} />
       </div>
     </div>
   );

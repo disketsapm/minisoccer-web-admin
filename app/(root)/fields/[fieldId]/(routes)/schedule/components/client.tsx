@@ -18,6 +18,8 @@ import { useGetScheduleBoard } from "@/hooks/schedule/useGetScheduleBoard";
 export const ScheduleClient = () => {
   const router = useRouter();
   const pathname = useParams();
+  const searchParams = useSearchParams();
+  console.log(searchParams.get("fieldName"));
   const { limit, onPaginationChange, skip, pagination } = usePagination();
   const { sorting, onSortingChange, field, order } = useSorting();
   const [params, setParams] = useState({
@@ -65,7 +67,7 @@ export const ScheduleClient = () => {
             Kembali
           </Button>
           <Heading
-            title={`Jadwal  `}
+            title={`Jadwal ${searchParams.get("fieldName")} `}
             description="Kelola jadwal Lapang "
           />
         </div>

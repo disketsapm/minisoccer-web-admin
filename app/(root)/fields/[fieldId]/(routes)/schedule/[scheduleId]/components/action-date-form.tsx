@@ -50,7 +50,7 @@ const formSchema = z.object({
 type BannerFormValues = z.infer<typeof formSchema>;
 
 export const ActionDateForm = ({ data }: any) => {
-  const { mutateAsync: updateSchedule } = useUpdateSchedule();
+  const { mutateAsync: updateSchedule, isPending } = useUpdateSchedule();
   const params = useParams();
 
   const form = useForm<BannerFormValues>({
@@ -59,7 +59,7 @@ export const ActionDateForm = ({ data }: any) => {
 
   useEffect(() => {
     if (data) {
-      form.setValue("price", data?.extendedProps?.price);
+      form.setValue("price", data?.extendedProps?.price.toString());
       form.setValue("status", data?.title);
     }
   }, [data]);
@@ -131,6 +131,7 @@ export const ActionDateForm = ({ data }: any) => {
               className="float-right w-[150px] self-end"
               size={"lg"}
               type="submit"
+              disabled={isPending}
             >
               Update Jadwal
             </Button>

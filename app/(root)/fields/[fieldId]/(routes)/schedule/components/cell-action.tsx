@@ -13,20 +13,9 @@ import toast from "react-hot-toast";
 import { extractFilenameFromURL } from "@/lib/utils";
 
 export const CellAction: React.FC<any> = ({ data }) => {
+  console.log(data);
   const params = useParams();
   const router = useRouter();
-  const { mutateAsync: deleteImageField } = useDeleteImageField();
-  const { mutateAsync: deleteFile } = useDeleteFile();
-  const onConfirm = async () => {
-    const image = extractFilenameFromURL(data?.url || "");
-
-    await deleteFile({ filename: image });
-    await deleteImageField({
-      _id: params.fieldId,
-      assetId: data._id
-    });
-    toast.success("ImageField deleted.");
-  };
 
   return (
     <>
@@ -34,11 +23,10 @@ export const CellAction: React.FC<any> = ({ data }) => {
         <Button
           variant={"outlinePrimary"}
           size={"sm"}
-          onClick={() => router.push(`/fields/${params.fieldId}/image/${data._id}`)}
+          onClick={() => router.push(`/fields/${params.fieldId}/schedule/${data._id}`)}
         >
           <Edit className=" h-4 w-4" />
         </Button>
-        <AlertDialogDelete onAction={onConfirm} />
       </div>
     </>
   );
